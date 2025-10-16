@@ -5,10 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kataktis POV Dashboard</title>
   <style>
+    :root {
+      --main-red: #d40000;
+      --dark-bg: #0a0a0a;
+      --panel-bg: #141414;
+      --text-light: #fff;
+      --text-gray: #bbb;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0e0e10;
-      color: white;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-light);
       margin: 0;
       padding: 0;
       display: flex;
@@ -16,21 +24,34 @@
       overflow: hidden;
     }
 
+    /* --- Sidebar --- */
     #sidebar {
-      width: 250px;
-      background: #18181b;
+      width: 270px;
+      background: var(--panel-bg);
       padding: 20px;
       box-sizing: border-box;
+      border-right: 2px solid var(--main-red);
       overflow-y: auto;
-      border-right: 2px solid #222;
     }
 
     #sidebar h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
       text-align: center;
-      border-bottom: 1px solid #333;
-      padding-bottom: 10px;
+      color: var(--main-red);
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    #logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    #logo-container img {
+      max-width: 120px;
+      height: auto;
+      filter: drop-shadow(0 0 6px var(--main-red));
     }
 
     .player-option {
@@ -38,21 +59,52 @@
       align-items: center;
       justify-content: space-between;
       margin: 10px 0;
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 8px 10px;
+      border: 1px solid #2a2a2a;
+      transition: 0.2s;
     }
 
-    .player-option img.flag {
-      width: 24px;
-      height: 16px;
-      margin-right: 8px;
+    .player-option:hover {
+      border-color: var(--main-red);
     }
 
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .flag {
+      width: 22px;
+      height: 15px;
+      border-radius: 2px;
+    }
+
+    /* --- Streams Grid --- */
     #streams {
       flex-grow: 1;
       display: grid;
-      gap: 8px;
-      background: #0e0e10;
+      gap: 10px;
       padding: 10px;
+      background: var(--dark-bg);
       transition: all 0.3s ease;
+    }
+
+    .stream {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 2px solid #222;
+      transition: transform 0.2s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .stream:hover {
+      border-color: var(--main-red);
+      transform: scale(1.02);
     }
 
     iframe {
@@ -62,16 +114,22 @@
       border-radius: 8px;
     }
 
-    .stream {
-      position: relative;
-      overflow: hidden;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+    .player-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .stream:hover {
-      transform: scale(1.02);
+    .player-label img {
+      width: 20px;
+      height: 14px;
     }
 
     .focused {
@@ -80,40 +138,39 @@
       z-index: 10;
     }
 
-    .player-label {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 4px 8px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .player-label img {
-      width: 20px;
-      height: 14px;
-      margin-right: 6px;
-    }
-
   </style>
 </head>
 <body>
   <div id="sidebar">
+    <div id="logo-container">
+      <!-- Mets ici le lien vers ton logo -->
+      <img src="https://kataktis.github.io/logo.png" alt="Logo Kataktis">
+    </div>
     <h2>🎮 Sélection des POV</h2>
+
     <div class="player-option">
-      <span><img src="https://flagcdn.com/w20/fr.png" class="flag"> Skyyart</span>
-      <input type="checkbox" class="toggle" data-player="skyyart" checked>
+      <div class="player-info"><img src="https://flagcdn.com/w20/hu.png" class="flag"> Erxk (Officiel)</div>
+      <input type="checkbox" class="toggle" data-player="erxk" checked>
     </div>
+
     <div class="player-option">
-      <span><img src="https://flagcdn.com/w20/de.png" class="flag"> Joueur2</span>
-      <input type="checkbox" class="toggle" data-player="joueur2">
+      <div class="player-info"><img src="https://flagcdn.com/w20/it.png" class="flag"> Haxo (Officiel)</div>
+      <input type="checkbox" class="toggle" data-player="haxo" checked>
     </div>
+
     <div class="player-option">
-      <span><img src="https://flagcdn.com/w20/es.png" class="flag"> Joueur3</span>
-      <input type="checkbox" class="toggle" data-player="joueur3">
+      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Shin (Officiel)</div>
+      <input type="checkbox" class="toggle" data-player="shin" checked>
+    </div>
+
+    <div class="player-option">
+      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Yayaz (Académique)</div>
+      <input type="checkbox" class="toggle" data-player="yayaz" checked>
+    </div>
+
+    <div class="player-option">
+      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Nerzox (Académique)</div>
+      <input type="checkbox" class="toggle" data-player="nerzox" checked>
     </div>
   </div>
 
@@ -123,21 +180,11 @@
     const streamsContainer = document.getElementById('streams');
 
     const players = {
-      skyyart: {
-        name: "Skyyart",
-        flag: "https://flagcdn.com/w20/fr.png",
-        channel: "skyyart"
-      },
-      joueur2: {
-        name: "Joueur2",
-        flag: "https://flagcdn.com/w20/de.png",
-        channel: "somechannel"
-      },
-      joueur3: {
-        name: "Joueur3",
-        flag: "https://flagcdn.com/w20/es.png",
-        channel: "otherchannel"
-      }
+      erxk: { name: "Erxk", flag: "https://flagcdn.com/w20/hu.png", channel: "erxk0" },
+      haxo: { name: "Haxo", flag: "https://flagcdn.com/w20/it.png", channel: "haxofnbr" },
+      shin: { name: "Shin", flag: "https://flagcdn.com/w20/fr.png", channel: "12shinn" },
+      yayaz: { name: "Yayaz", flag: "https://flagcdn.com/w20/fr.png", channel: "yayaz_fn" },
+      nerzox: { name: "Nerzox", flag: "https://flagcdn.com/w20/fr.png", channel: "nerzox35" }
     };
 
     function updateStreams() {
@@ -150,24 +197,19 @@
         }
       });
 
-      // Adapter le layout automatiquement selon le nombre de POV
+      // Adapter automatiquement la grille selon le nombre de streams
       const count = activePlayers.length;
-      if (count <= 1) {
-        streamsContainer.style.gridTemplateColumns = "1fr";
-      } else if (count === 2) {
-        streamsContainer.style.gridTemplateColumns = "1fr 1fr";
-      } else if (count === 3) {
-        streamsContainer.style.gridTemplateColumns = "1fr 1fr 1fr";
-      } else {
-        streamsContainer.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
-      }
+      if (count === 1) streamsContainer.style.gridTemplateColumns = "1fr";
+      else if (count === 2) streamsContainer.style.gridTemplateColumns = "1fr 1fr";
+      else if (count <= 4) streamsContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
+      else streamsContainer.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
 
       // Ajouter les streams sélectionnés
       activePlayers.forEach(playerKey => {
         const player = players[playerKey];
-        const streamDiv = document.createElement('div');
-        streamDiv.classList.add('stream');
-        streamDiv.innerHTML = `
+        const div = document.createElement('div');
+        div.classList.add('stream');
+        div.innerHTML = `
           <div class="player-label">
             <img src="${player.flag}" alt="">
             ${player.name}
@@ -177,21 +219,19 @@
             allowfullscreen>
           </iframe>
         `;
-        streamDiv.addEventListener('click', () => {
-          if (streamDiv.classList.contains('focused')) {
-            streamDiv.classList.remove('focused');
+        div.addEventListener('click', () => {
+          if (div.classList.contains('focused')) {
+            div.classList.remove('focused');
           } else {
             document.querySelectorAll('.stream').forEach(s => s.classList.remove('focused'));
-            streamDiv.classList.add('focused');
+            div.classList.add('focused');
           }
         });
-        streamsContainer.appendChild(streamDiv);
+        streamsContainer.appendChild(div);
       });
     }
 
-    document.querySelectorAll('.toggle').forEach(toggle => {
-      toggle.addEventListener('change', updateStreams);
-    });
+    document.querySelectorAll('.toggle').forEach(t => t.addEventListener('change', updateStreams));
 
     updateStreams();
   </script>
