@@ -1,167 +1,200 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard POV - Kataktis eSport</title>
-<style>
-  body {
-    margin: 0;
-    font-family: sans-serif;
-    background: #0e0e0e;
-    color: #fff;
-    display: flex;
-    height: 100vh;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kataktis POV Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0e0e10;
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-  .sidebar {
-    width: 250px;
-    background: #1a1a1a;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
+    #sidebar {
+      width: 250px;
+      background: #18181b;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      border-right: 2px solid #222;
+    }
 
-  .sidebar h2 {
-    margin-top: 0;
-    font-size: 18px;
-    text-transform: uppercase;
-    border-bottom: 1px solid #333;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-  }
+    #sidebar h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
 
-  .sidebar label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    user-select: none;
-  }
+    .player-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
 
-  .sidebar img {
-    width: 22px;
-    height: 15px;
-    margin-right: 8px;
-    border-radius: 2px;
-  }
+    .player-option img.flag {
+      width: 24px;
+      height: 16px;
+      margin-right: 8px;
+    }
 
-  .main {
-    flex: 1;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
+    #streams {
+      flex-grow: 1;
+      display: grid;
+      gap: 8px;
+      background: #0e0e10;
+      padding: 10px;
+      transition: all 0.3s ease;
+    }
 
-  .grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-  }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
 
-  .player {
-    width: 48%;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+    .stream {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
-  .player.focused {
-    width: 98%;
-    z-index: 10;
-  }
+    .stream:hover {
+      transform: scale(1.02);
+    }
 
-  iframe {
-    width: 100%;
-    height: 300px;
-    border: 2px solid #444;
-    border-radius: 10px;
-  }
+    .focused {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      z-index: 10;
+    }
 
-  .name {
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    background: rgba(0,0,0,0.6);
-    padding: 4px 8px;
-    font-size: 14px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-  }
+    .player-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
 
-  .name img {
-    width: 20px;
-    height: 14px;
-    margin-right: 5px;
-  }
+    .player-label img {
+      width: 20px;
+      height: 14px;
+      margin-right: 6px;
+    }
 
-  .hidden {
-    display: none;
-  }
-
-  @media (max-width: 900px) {
-    .player { width: 100%; }
-  }
-</style>
+  </style>
 </head>
 <body>
-
-<div class="sidebar">
-  <h2>Choix des joueurs</h2>
-  <label><input type="checkbox" data-player="player1" checked> <img src="https://flagcdn.com/w20/fr.png"> Player 1</label>
-  <label><input type="checkbox" data-player="player2" checked> <img src="https://flagcdn.com/w20/us.png"> Player 2</label>
-  <label><input type="checkbox" data-player="player3" checked> <img src="https://flagcdn.com/w20/de.png"> Player 3</label>
-  <label><input type="checkbox" data-player="player4" checked> <img src="https://flagcdn.com/w20/es.png"> Skyyart</label>
-</div>
-
-<div class="main">
-  <div class="grid" id="playerGrid">
-    <div class="player" id="player1" onclick="focusPlayer(this)">
-      <iframe src="https://player.twitch.tv/?channel=player1&parent=kataktis.github.io" allowfullscreen></iframe>
-      <div class="name"><img src="https://flagcdn.com/w20/fr.png"> Player 1</div>
+  <div id="sidebar">
+    <h2>🎮 Sélection des POV</h2>
+    <div class="player-option">
+      <span><img src="https://flagcdn.com/w20/fr.png" class="flag"> Skyyart</span>
+      <input type="checkbox" class="toggle" data-player="skyyart" checked>
     </div>
-    <div class="player" id="player2" onclick="focusPlayer(this)">
-      <iframe src="https://player.twitch.tv/?channel=player2&parent=kataktis.github.io" allowfullscreen></iframe>
-      <div class="name"><img src="https://flagcdn.com/w20/us.png"> Player 2</div>
+    <div class="player-option">
+      <span><img src="https://flagcdn.com/w20/de.png" class="flag"> Joueur2</span>
+      <input type="checkbox" class="toggle" data-player="joueur2">
     </div>
-    <div class="player" id="player3" onclick="focusPlayer(this)">
-      <iframe src="https://player.twitch.tv/?channel=player3&parent=kataktis.github.io" allowfullscreen></iframe>
-      <div class="name"><img src="https://flagcdn.com/w20/de.png"> Player 3</div>
-    </div>
-    <div class="player" id="player4" onclick="focusPlayer(this)">
-      <iframe src="https://player.twitch.tv/?channel=skyyart&parent=kataktis.github.io" allowfullscreen></iframe>
-      <div class="name"><img src="https://flagcdn.com/w20/es.png"> Skyyart</div>
+    <div class="player-option">
+      <span><img src="https://flagcdn.com/w20/es.png" class="flag"> Joueur3</span>
+      <input type="checkbox" class="toggle" data-player="joueur3">
     </div>
   </div>
-</div>
 
-<script>
-const players = document.querySelectorAll('.player');
-const checkboxes = document.querySelectorAll('.sidebar input[type="checkbox"]');
+  <div id="streams"></div>
 
-function focusPlayer(player) {
-  if (player.classList.contains('focused')) {
-    player.classList.remove('focused');
-  } else {
-    players.forEach(p => p.classList.remove('focused'));
-    player.classList.add('focused');
-  }
-}
+  <script>
+    const streamsContainer = document.getElementById('streams');
 
-checkboxes.forEach(cb => {
-  cb.addEventListener('change', () => {
-    const playerId = cb.dataset.player;
-    const playerDiv = document.getElementById(playerId);
-    if (cb.checked) {
-      playerDiv.classList.remove('hidden');
-    } else {
-      playerDiv.classList.add('hidden');
+    const players = {
+      skyyart: {
+        name: "Skyyart",
+        flag: "https://flagcdn.com/w20/fr.png",
+        channel: "skyyart"
+      },
+      joueur2: {
+        name: "Joueur2",
+        flag: "https://flagcdn.com/w20/de.png",
+        channel: "somechannel"
+      },
+      joueur3: {
+        name: "Joueur3",
+        flag: "https://flagcdn.com/w20/es.png",
+        channel: "otherchannel"
+      }
+    };
+
+    function updateStreams() {
+      streamsContainer.innerHTML = '';
+      const activePlayers = [];
+
+      document.querySelectorAll('.toggle').forEach(toggle => {
+        if (toggle.checked) {
+          activePlayers.push(toggle.dataset.player);
+        }
+      });
+
+      // Adapter le layout automatiquement selon le nombre de POV
+      const count = activePlayers.length;
+      if (count <= 1) {
+        streamsContainer.style.gridTemplateColumns = "1fr";
+      } else if (count === 2) {
+        streamsContainer.style.gridTemplateColumns = "1fr 1fr";
+      } else if (count === 3) {
+        streamsContainer.style.gridTemplateColumns = "1fr 1fr 1fr";
+      } else {
+        streamsContainer.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
+      }
+
+      // Ajouter les streams sélectionnés
+      activePlayers.forEach(playerKey => {
+        const player = players[playerKey];
+        const streamDiv = document.createElement('div');
+        streamDiv.classList.add('stream');
+        streamDiv.innerHTML = `
+          <div class="player-label">
+            <img src="${player.flag}" alt="">
+            ${player.name}
+          </div>
+          <iframe
+            src="https://player.twitch.tv/?channel=${player.channel}&parent=kataktis.github.io"
+            allowfullscreen>
+          </iframe>
+        `;
+        streamDiv.addEventListener('click', () => {
+          if (streamDiv.classList.contains('focused')) {
+            streamDiv.classList.remove('focused');
+          } else {
+            document.querySelectorAll('.stream').forEach(s => s.classList.remove('focused'));
+            streamDiv.classList.add('focused');
+          }
+        });
+        streamsContainer.appendChild(streamDiv);
+      });
     }
-  });
-});
-</script>
 
+    document.querySelectorAll('.toggle').forEach(toggle => {
+      toggle.addEventListener('change', updateStreams);
+    });
+
+    updateStreams();
+  </script>
 </body>
 </html>
