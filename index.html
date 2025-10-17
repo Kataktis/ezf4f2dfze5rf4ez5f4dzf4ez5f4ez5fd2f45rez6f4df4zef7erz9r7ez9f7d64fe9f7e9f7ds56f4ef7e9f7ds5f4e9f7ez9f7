@@ -60,7 +60,7 @@ const players = [
 const povGrid = document.getElementById("povGrid");
 const checkboxes = document.querySelectorAll(".player-selection input");
 let focusedId = null;
-const embeds = {}; // stocke les objets Twitch.Embed
+const embeds = {};
 
 function renderPOVs(){
   povGrid.innerHTML="";
@@ -78,10 +78,11 @@ function renderPOVs(){
 
     if(!embeds[p.id]){
       embeds[p.id]=new Twitch.Embed(`embed-${p.id}`, {
-        width:"100%", height:"100%",
+        width: "100%",
+        height: "100%",
         channel: p.twitch,
-        parent:[location.hostname],
-        muted:true
+        parent: ["kataktis.github.io"], // <- ton domaine GitHub Pages
+        muted: true
       });
     }
   });
@@ -102,7 +103,6 @@ function focusPOV(id){
   pov.classList.add("focused");
   focusedId=id;
 
-  // mute tous sauf le focus
   players.forEach(p=>{
     const playerEmbed=embeds[p.id];
     if(playerEmbed && playerEmbed.getPlayer){
@@ -115,14 +115,12 @@ function focusPOV(id){
 function exitFocus(){
   document.querySelectorAll(".pov").forEach(p=>p.classList.remove("focused"));
   focusedId=null;
-  // mute tous
   players.forEach(p=>{
     const playerEmbed=embeds[p.id];
-    if(playerEmbed && playerEmbed.getPlayer()) playerEmbed.getPlayer().setMuted(true);
+    if(playerEmbed && playerEmbed.getPlayer) playerEmbed.getPlayer().setMuted(true);
   });
 }
 
-// raccourcis clavier
 document.addEventListener("keydown", e=>{
   const activePovs=Array.from(document.querySelectorAll(".pov"));
   if(focusedId===null) return;
@@ -133,7 +131,6 @@ document.addEventListener("keydown", e=>{
 });
 
 checkboxes.forEach(cb=>cb.addEventListener("change", renderPOVs));
-
 renderPOVs();
 </script>
 
