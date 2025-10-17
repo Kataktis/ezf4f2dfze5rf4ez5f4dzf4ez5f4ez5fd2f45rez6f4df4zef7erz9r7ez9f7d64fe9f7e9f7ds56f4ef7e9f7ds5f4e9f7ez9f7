@@ -46,6 +46,27 @@
       margin: 5px 10px;
       cursor: pointer;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
+
+    .player-selection button {
+      background-color: #b10000;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .player-selection button:hover {
+      background-color: #ff0000;
     }
 
     .pov-grid {
@@ -103,28 +124,28 @@
   </header>
 
   <div class="player-selection">
-    <label><input type="checkbox" checked data-player="erxk"> 🇭🇺 Erxk (Officiel)</label>
-    <label><input type="checkbox" checked data-player="haxo"> 🇮🇹 Haxo (Officiel)</label>
-    <label><input type="checkbox" checked data-player="shin"> 🇫🇷 Shin (Officiel)</label>
-    <label><input type="checkbox" checked data-player="yayaz"> 🇫🇷 Yayaz (Académique)</label>
-    <label><input type="checkbox" checked data-player="nerzox"> 🇫🇷 Nerzox (Académique)</label>
+    <label><input type="checkbox" checked data-player="erxk"> 🇭🇺 Erxk (Officiel) <button data-focus="erxk">🎯 Focus</button></label>
+    <label><input type="checkbox" checked data-player="haxo"> 🇮🇹 Haxo (Officiel) <button data-focus="haxo">🎯 Focus</button></label>
+    <label><input type="checkbox" checked data-player="shin"> 🇫🇷 Shin (Officiel) <button data-focus="shin">🎯 Focus</button></label>
+    <label><input type="checkbox" checked data-player="yayaz"> 🇫🇷 Yayaz (Académique) <button data-focus="yayaz">🎯 Focus</button></label>
+    <label><input type="checkbox" checked data-player="nerzox"> 🇫🇷 Nerzox (Académique) <button data-focus="nerzox">🎯 Focus</button></label>
   </div>
 
   <div class="pov-grid">
     <div class="pov" data-player="erxk">
-      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io" allowfullscreen></iframe>
+      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="haxo">
-      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io" allowfullscreen></iframe>
+      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="shin">
-      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io" allowfullscreen></iframe>
+      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="yayaz">
-      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io" allowfullscreen></iframe>
+      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="nerzox">
-      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io" allowfullscreen></iframe>
+      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -135,10 +156,10 @@
   <script>
     const checkboxes = document.querySelectorAll('.player-selection input');
     const povs = document.querySelectorAll('.pov');
+    const focusButtons = document.querySelectorAll('[data-focus]');
     let focusedIndex = -1;
     const povArray = Array.from(povs);
 
-    // Affichage / masquage des POV selon la sélection
     function resizePOVs() {
       const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
@@ -153,6 +174,7 @@
       }
     }
 
+    // Toggle affichage POV
     checkboxes.forEach(cb => {
       cb.addEventListener('change', () => {
         const player = cb.getAttribute('data-player');
@@ -163,34 +185,62 @@
       });
     });
 
-    povs.forEach((pov, index) => {
-      pov.addEventListener('click', () => {
+    // Fonction focus via bouton
+    focusButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-focus');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
         if (pov.classList.contains('focused')) {
           pov.classList.remove('focused');
           focusedIndex = -1;
+          muteAllPOVs(true);
         } else {
           povs.forEach(p => p.classList.remove('focused'));
           pov.classList.add('focused');
-          focusedIndex = index;
+          focusedIndex = povArray.indexOf(pov);
+          muteAllPOVs(true);
+          unmutePOV(pov);
         }
       });
     });
 
+    // Navigation clavier
     document.addEventListener('keydown', (e) => {
       if (focusedIndex === -1) return;
       if (e.key === 'ArrowRight') {
-        povArray[focusedIndex].classList.remove('focused');
-        focusedIndex = (focusedIndex + 1) % povArray.length;
-        povArray[focusedIndex].classList.add('focused');
+        changeFocus(1);
       } else if (e.key === 'ArrowLeft') {
-        povArray[focusedIndex].classList.remove('focused');
-        focusedIndex = (focusedIndex - 1 + povArray.length) % povArray.length;
-        povArray[focusedIndex].classList.add('focused');
+        changeFocus(-1);
       } else if (e.key === 'Escape') {
         povArray[focusedIndex].classList.remove('focused');
         focusedIndex = -1;
+        muteAllPOVs(true);
       }
     });
+
+    function changeFocus(direction) {
+      povArray[focusedIndex].classList.remove('focused');
+      focusedIndex = (focusedIndex + direction + povArray.length) % povArray.length;
+      povArray[focusedIndex].classList.add('focused');
+      muteAllPOVs(true);
+      unmutePOV(povArray[focusedIndex]);
+    }
+
+    function muteAllPOVs(mute = true) {
+      povArray.forEach(pov => {
+        const iframe = pov.querySelector('iframe');
+        const src = new URL(iframe.src);
+        src.searchParams.set('muted', mute ? 'true' : 'false');
+        iframe.src = src.toString();
+      });
+    }
+
+    function unmutePOV(pov) {
+      const iframe = pov.querySelector('iframe');
+      const src = new URL(iframe.src);
+      src.searchParams.set('muted', 'false');
+      iframe.src = src.toString();
+    }
 
     window.addEventListener('resize', resizePOVs);
     resizePOVs();
