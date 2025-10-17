@@ -14,12 +14,11 @@
     }
 
     body {
-      background-color: #0d0d0d;
+      background-color: #0a0a0a;
       color: white;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
     header {
@@ -28,7 +27,7 @@
       justify-content: space-between;
       background-color: #1a1a1a;
       padding: 10px 20px;
-      border-bottom: 3px solid #ff0000;
+      border-bottom: 3px solid #b10000;
       flex-wrap: wrap;
     }
 
@@ -36,274 +35,258 @@
       height: 50px;
     }
 
-    .title {
+    h1 {
+      color: #b10000;
       font-size: 1.8em;
-      color: #ff0000;
       letter-spacing: 2px;
-      text-align: center;
+      text-transform: uppercase;
       flex: 1;
+      text-align: center;
     }
 
     .player-selection {
       display: flex;
-      gap: 10px;
-      align-items: center;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 10px;
+      background: #141414;
+      padding: 10px;
+      border-bottom: 2px solid #b10000;
+      gap: 10px;
     }
 
     .player-selection label {
       display: flex;
       align-items: center;
-      background: #262626;
-      padding: 5px 10px;
+      gap: 6px;
+      background: #1f1f1f;
       border-radius: 8px;
+      padding: 6px 10px;
       cursor: pointer;
       transition: 0.2s;
     }
 
     .player-selection label:hover {
-      background: #ff0000;
+      background: #b10000;
     }
 
     .player-selection img {
-      width: 20px;
-      height: 14px;
-      margin-right: 6px;
+      width: 18px;
+      height: 12px;
       border-radius: 2px;
     }
 
     main {
       flex: 1;
+      padding: 10px;
       display: flex;
       justify-content: center;
       align-items: stretch;
-      padding: 10px;
     }
 
-    .grid {
+    .pov-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      gap: 10px;
       width: 100%;
       height: 100%;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      transition: all 0.3s ease;
     }
 
     .pov {
       position: relative;
-      background: black;
-      border: 2px solid #ff0000;
+      border: 2px solid #b10000;
       border-radius: 10px;
       overflow: hidden;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: black;
     }
 
     .pov iframe {
       width: 100%;
       height: 100%;
+      border: none;
     }
 
-    .pov-info {
+    .info-bar {
       position: absolute;
       bottom: 8px;
       left: 8px;
       background: rgba(0, 0, 0, 0.6);
       padding: 4px 8px;
-      border-radius: 5px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 14px;
     }
 
-    .pov-info img {
+    .info-bar img {
       width: 20px;
       height: 14px;
       border-radius: 2px;
     }
 
-    .focus {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 10;
-      background: black;
-    }
-
-    .focus iframe {
-      width: 100%;
-      height: 100%;
-    }
-
-    footer {
-      background-color: #1a1a1a;
-      border-top: 3px solid #ff0000;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.9em;
-      color: #aaa;
-      margin-top: auto;
-    }
-
-    button.focus-btn {
+    .focus-btn {
       position: absolute;
       top: 8px;
       right: 8px;
-      background: rgba(255, 0, 0, 0.7);
+      background: #b10000;
       border: none;
       color: white;
-      padding: 5px 8px;
       border-radius: 5px;
+      padding: 4px 8px;
       cursor: pointer;
       transition: 0.2s;
     }
 
-    button.focus-btn:hover {
-      background: rgba(255, 0, 0, 1);
+    .focus-btn:hover {
+      background: #ff0000;
+    }
+
+    .focused {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 100;
+      background: black;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 25px #ff0000;
+    }
+
+    footer {
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Logo Kataktis" />
-    <div class="title">KATAKTIS POV MANAGER</div>
-    <div class="player-selection" id="playerSelection"></div>
+    <img src="logo.png" alt="Logo Kataktis">
+    <h1>Kataktis POV Manager</h1>
   </header>
 
+  <div class="player-selection">
+    <label><img src="hu.png" alt="🇭🇺"><input type="checkbox" data-player="erxk" checked> Erxk</label>
+    <label><img src="it.png" alt="🇮🇹"><input type="checkbox" data-player="haxo" checked> Haxo</label>
+    <label><img src="fr.png" alt="🇫🇷"><input type="checkbox" data-player="shin" checked> Shin</label>
+    <label><img src="fr.png" alt="🇫🇷"><input type="checkbox" data-player="yayaz" checked> Yayaz</label>
+    <label><img src="fr.png" alt="🇫🇷"><input type="checkbox" data-player="nerzox" checked> Nerzox</label>
+  </div>
+
   <main>
-    <div class="grid" id="povGrid"></div>
+    <div class="pov-grid" id="povGrid"></div>
   </main>
 
-  <footer>© 2025 Kataktis Esport — Interface Staff Only</footer>
+  <footer>© 2025 Kataktis eSport — Interface Staff POV</footer>
 
-  <script src="https://embed.twitch.tv/embed/v1.js"></script>
   <script>
     const players = [
-      { name: "Erxk", country: "hu", twitch: "erxk0" },
-      { name: "Haxo", country: "it", twitch: "haxofnbr" },
-      { name: "Shin", country: "fr", twitch: "12shinn" },
-      { name: "Yayaz", country: "fr", twitch: "yayaz_fn" },
-      { name: "Nerzox", country: "fr", twitch: "nerzox35" },
+      { id: 'erxk', name: 'Erxk', flag: 'hu.png', twitch: 'erxk0' },
+      { id: 'haxo', name: 'Haxo', flag: 'it.png', twitch: 'haxofnbr' },
+      { id: 'shin', name: 'Shin', flag: 'fr.png', twitch: '12shinn' },
+      { id: 'yayaz', name: 'Yayaz', flag: 'fr.png', twitch: 'yayaz_fn' },
+      { id: 'nerzox', name: 'Nerzox', flag: 'fr.png', twitch: 'nerzox35' }
     ];
 
-    const grid = document.getElementById("povGrid");
-    const selection = document.getElementById("playerSelection");
-    let activePlayers = new Set(players.map((p) => p.name));
-    let focusedPlayer = null;
+    const povGrid = document.getElementById('povGrid');
+    const checkboxes = document.querySelectorAll('.player-selection input');
+    let focusedIndex = -1;
 
-    function renderSelection() {
-      selection.innerHTML = "";
-      players.forEach((p) => {
-        const label = document.createElement("label");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = activePlayers.has(p.name);
-        checkbox.addEventListener("change", () => {
-          if (checkbox.checked) activePlayers.add(p.name);
-          else activePlayers.delete(p.name);
-          renderGrid();
-        });
+    // Crée la grille initiale
+    function renderPOVs() {
+      povGrid.innerHTML = '';
+      const activePlayers = players.filter(p => document.querySelector(`input[data-player="${p.id}"]`).checked);
 
-        const flag = document.createElement("img");
-        flag.src = `${p.country}.png`;
-
-        label.appendChild(flag);
-        label.appendChild(document.createTextNode(p.name + " "));
-        label.appendChild(checkbox);
-        selection.appendChild(label);
-      });
-    }
-
-    function renderGrid() {
-      grid.innerHTML = "";
-      const active = players.filter((p) => activePlayers.has(p.name));
-      active.forEach((p) => {
-        const pov = document.createElement("div");
-        pov.className = "pov";
-        pov.innerHTML = `
-          <div id="twitch-${p.twitch}" class="twitch-container"></div>
-          <div class="pov-info">
-            <img src="${p.country}.png" alt="">
-            <span>${p.name}</span>
-          </div>
-          <button class="focus-btn" onclick="focusPOV('${p.twitch}')">Focus</button>
+      activePlayers.forEach(p => {
+        const div = document.createElement('div');
+        div.classList.add('pov');
+        div.dataset.player = p.id;
+        div.innerHTML = `
+          <iframe src="https://player.twitch.tv/?channel=${p.twitch}&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+          <div class="info-bar"><img src="${p.flag}" alt=""><span>${p.name}</span></div>
+          <button class="focus-btn" onclick="focusPOV('${p.id}')">🎯 Focus</button>
         `;
-        grid.appendChild(pov);
+        povGrid.appendChild(div);
+      });
 
-        // Lancer le stream Twitch
-        setTimeout(() => {
-          new Twitch.Embed(`twitch-${p.twitch}`, {
-            width: "100%",
-            height: "100%",
-            channel: p.twitch,
-            layout: "video",
-            autoplay: false,
-            muted: true,
-          });
-        }, 200);
+      resizePOVs();
+    }
+
+    // Adapter la grille selon le nombre de POV
+    function resizePOVs() {
+      const count = povGrid.children.length;
+      if (count === 1) povGrid.style.gridTemplateColumns = '1fr';
+      else if (count === 2) povGrid.style.gridTemplateColumns = '1fr 1fr';
+      else if (count <= 4) povGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      else povGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(400px, 1fr))';
+    }
+
+    // Focus sur un joueur
+    function focusPOV(playerId) {
+      const povs = document.querySelectorAll('.pov');
+      povs.forEach(p => p.classList.remove('focused'));
+      const pov = document.querySelector(`.pov[data-player="${playerId}"]`);
+      if (!pov) return;
+
+      pov.classList.add('focused');
+      focusedIndex = Array.from(povs).indexOf(pov);
+      muteAll(true);
+      unmutePOV(pov);
+    }
+
+    // Quitter le focus
+    function exitFocus() {
+      const povs = document.querySelectorAll('.pov');
+      povs.forEach(p => p.classList.remove('focused'));
+      focusedIndex = -1;
+      muteAll(true);
+    }
+
+    // Mute / unmute des streams sans reload
+    function muteAll(mute = true) {
+      const povs = document.querySelectorAll('.pov iframe');
+      povs.forEach(iframe => {
+        const src = new URL(iframe.src);
+        src.searchParams.set('muted', mute ? 'true' : 'false');
+        iframe.src = src.toString();
       });
     }
 
-    function focusPOV(twitch) {
-      if (focusedPlayer) return;
-      const playerData = players.find((p) => p.twitch === twitch);
-      focusedPlayer = playerData;
-
-      const focusDiv = document.createElement("div");
-      focusDiv.className = "focus";
-      focusDiv.innerHTML = `
-        <div id="focus-twitch"></div>
-        <div class="pov-info" style="bottom:20px;left:20px;font-size:20px;">
-          <img src="${playerData.country}.png" alt="">
-          <span>${playerData.name}</span>
-        </div>
-      `;
-      document.body.appendChild(focusDiv);
-
-      setTimeout(() => {
-        new Twitch.Embed("focus-twitch", {
-          width: "100%",
-          height: "100%",
-          channel: twitch,
-          layout: "video",
-          autoplay: true,
-          muted: false,
-        });
-      }, 200);
+    function unmutePOV(pov) {
+      const iframe = pov.querySelector('iframe');
+      const src = new URL(iframe.src);
+      src.searchParams.set('muted', 'false');
+      iframe.src = src.toString();
     }
 
-    function exitFocus() {
-      const focusDiv = document.querySelector(".focus");
-      if (focusDiv) focusDiv.remove();
-      focusedPlayer = null;
-    }
+    // Raccourcis clavier
+    document.addEventListener('keydown', e => {
+      const povs = Array.from(document.querySelectorAll('.pov'));
+      if (focusedIndex === -1) return;
 
-    document.addEventListener("keydown", (e) => {
-      const visiblePlayers = players.filter((p) => activePlayers.has(p.name));
-      if (focusedPlayer) {
-        let index = visiblePlayers.findIndex((p) => p.name === focusedPlayer.name);
-        if (e.key === "ArrowRight") {
-          exitFocus();
-          const next = visiblePlayers[(index + 1) % visiblePlayers.length];
-          focusPOV(next.twitch);
-        } else if (e.key === "ArrowLeft") {
-          exitFocus();
-          const prev = visiblePlayers[(index - 1 + visiblePlayers.length) % visiblePlayers.length];
-          focusPOV(prev.twitch);
-        } else if (e.key === "Escape") {
-          exitFocus();
-        }
-      }
+      if (e.key === 'ArrowRight') changeFocus(1, povs);
+      else if (e.key === 'ArrowLeft') changeFocus(-1, povs);
+      else if (e.key === 'Escape') exitFocus();
     });
 
-    renderSelection();
-    renderGrid();
+    function changeFocus(direction, povs) {
+      povs[focusedIndex].classList.remove('focused');
+      focusedIndex = (focusedIndex + direction + povs.length) % povs.length;
+      povs[focusedIndex].classList.add('focused');
+      muteAll(true);
+      unmutePOV(povs[focusedIndex]);
+    }
+
+    // Réaction aux checkbox
+    checkboxes.forEach(cb => cb.addEventListener('change', renderPOVs));
+
+    // Initialisation
+    renderPOVs();
   </script>
 </body>
 </html>
