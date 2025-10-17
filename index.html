@@ -3,238 +3,181 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kataktis POV Dashboard</title>
+  <title>Kataktis POV Manager</title>
   <style>
-    :root {
-      --main-red: #d40000;
-      --dark-bg: #0a0a0a;
-      --panel-bg: #141414;
-      --text-light: #fff;
-      --text-gray: #bbb;
-    }
-
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: var(--dark-bg);
-      color: var(--text-light);
+      background-color: #0a0a0a;
+      color: white;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
     }
 
-    /* --- Sidebar --- */
-    #sidebar {
-      width: 270px;
-      background: var(--panel-bg);
-      padding: 20px;
-      box-sizing: border-box;
-      border-right: 2px solid var(--main-red);
-      overflow-y: auto;
-    }
-
-    #sidebar h2 {
-      text-align: center;
-      color: var(--main-red);
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-    }
-
-    #logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    #logo-container img {
-      max-width: 120px;
-      height: auto;
-      filter: drop-shadow(0 0 6px var(--main-red));
-    }
-
-    .player-option {
+    header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 10px 0;
-      background: #1a1a1a;
-      border-radius: 8px;
-      padding: 8px 10px;
-      border: 1px solid #2a2a2a;
-      transition: 0.2s;
+      padding: 10px 30px;
+      background-color: #b10000;
+      box-shadow: 0 0 10px #b10000;
     }
 
-    .player-option:hover {
-      border-color: var(--main-red);
+    header img {
+      height: 50px;
     }
 
-    .player-info {
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .player-selection {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-    }
-
-    .flag {
-      width: 22px;
-      height: 15px;
-      border-radius: 2px;
-    }
-
-    /* --- Streams Grid --- */
-    #streams {
-      flex-grow: 1;
-      display: grid;
-      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
       padding: 10px;
-      background: var(--dark-bg);
-      transition: all 0.3s ease;
+      background-color: #1a1a1a;
+      border-bottom: 2px solid #b10000;
     }
 
-    .stream {
-      position: relative;
-      overflow: hidden;
-      border-radius: 10px;
-      border: 2px solid #222;
-      transition: transform 0.2s ease, border-color 0.3s ease;
+    .player-selection label {
+      margin: 5px 10px;
       cursor: pointer;
+      font-weight: bold;
     }
 
-    .stream:hover {
-      border-color: var(--main-red);
-      transform: scale(1.02);
+    .pov-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 10px;
+      padding: 20px;
+      transition: all 0.3s ease;
     }
 
     iframe {
       width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .player-label {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .player-label img {
-      width: 20px;
-      height: 14px;
+      height: 300px;
+      border: 2px solid #b10000;
+      border-radius: 10px;
     }
 
     .focused {
-      grid-column: 1 / -1;
-      grid-row: 1 / -1;
-      z-index: 10;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90vw;
+      height: 90vh;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 30px #ff0000;
     }
 
+    .hidden {
+      display: none;
+    }
+
+    .flag {
+      width: 20px;
+      height: 14px;
+      margin-right: 6px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
+    }
   </style>
 </head>
 <body>
-  <div id="sidebar">
-    <div id="logo-container">
-      <!-- Mets ici le lien vers ton logo -->
-      <img src="https://kataktis.github.io/logo.png" alt="Logo Kataktis">
-    </div>
-    <h2>Sélection des POV</h2>
+  <header>
+    <img src="logo.png" alt="Logo Team">
+    <h1>Kataktis POV Manager</h1>
+  </header>
 
-    <div class="player-option">
-      <div class="player-info"><img src="https://flagcdn.com/w20/hu.png" class="flag"> Erxk (Officiel)</div>
-      <input type="checkbox" class="toggle" data-player="erxk" checked>
-    </div>
+  <div class="player-selection">
+    <label><input type="checkbox" checked data-player="erxk"> 🇭🇺 Erxk (Officiel)</label>
+    <label><input type="checkbox" checked data-player="haxo"> 🇮🇹 Haxo (Officiel)</label>
+    <label><input type="checkbox" checked data-player="shin"> 🇫🇷 Shin (Officiel)</label>
+    <label><input type="checkbox" checked data-player="yayaz"> 🇫🇷 Yayaz (Académique)</label>
+    <label><input type="checkbox" checked data-player="nerzox"> 🇫🇷 Nerzox (Académique)</label>
+  </div>
 
-    <div class="player-option">
-      <div class="player-info"><img src="https://flagcdn.com/w20/it.png" class="flag"> Haxo (Officiel)</div>
-      <input type="checkbox" class="toggle" data-player="haxo" checked>
+  <div class="pov-grid">
+    <div class="pov" data-player="erxk">
+      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
-
-    <div class="player-option">
-      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Shin (Officiel)</div>
-      <input type="checkbox" class="toggle" data-player="shin" checked>
+    <div class="pov" data-player="haxo">
+      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
-
-    <div class="player-option">
-      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Yayaz (Académique)</div>
-      <input type="checkbox" class="toggle" data-player="yayaz" checked>
+    <div class="pov" data-player="shin">
+      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
-
-    <div class="player-option">
-      <div class="player-info"><img src="https://flagcdn.com/w20/fr.png" class="flag"> Nerzox (Académique)</div>
-      <input type="checkbox" class="toggle" data-player="nerzox" checked>
+    <div class="pov" data-player="yayaz">
+      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io" allowfullscreen></iframe>
+    </div>
+    <div class="pov" data-player="nerzox">
+      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
   </div>
 
-  <div id="streams"></div>
+  <footer>
+    ⚡ Kataktis eSport - Interface Staff POV
+  </footer>
 
   <script>
-    const streamsContainer = document.getElementById('streams');
+    const checkboxes = document.querySelectorAll('.player-selection input');
+    const povs = document.querySelectorAll('.pov');
+    let focusedIndex = -1;
+    const povArray = Array.from(povs);
 
-    const players = {
-      erxk: { name: "Erxk", flag: "https://flagcdn.com/w20/hu.png", channel: "erxk0" },
-      haxo: { name: "Haxo", flag: "https://flagcdn.com/w20/it.png", channel: "haxofnbr" },
-      shin: { name: "Shin", flag: "https://flagcdn.com/w20/fr.png", channel: "12shinn" },
-      yayaz: { name: "Yayaz", flag: "https://flagcdn.com/w20/fr.png", channel: "yayaz_fn" },
-      nerzox: { name: "Nerzox", flag: "https://flagcdn.com/w20/fr.png", channel: "nerzox35" }
-    };
+    // Affichage / masquage des POV selon la sélection
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const player = cb.getAttribute('data-player');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        if (cb.checked) pov.classList.remove('hidden');
+        else pov.classList.add('hidden');
+      });
+    });
 
-    function updateStreams() {
-      streamsContainer.innerHTML = '';
-      const activePlayers = [];
-
-      document.querySelectorAll('.toggle').forEach(toggle => {
-        if (toggle.checked) {
-          activePlayers.push(toggle.dataset.player);
+    // Clique sur une POV pour la mettre en focus
+    povs.forEach((pov, index) => {
+      pov.addEventListener('click', () => {
+        if (pov.classList.contains('focused')) {
+          pov.classList.remove('focused');
+          focusedIndex = -1;
+        } else {
+          povs.forEach(p => p.classList.remove('focused'));
+          pov.classList.add('focused');
+          focusedIndex = index;
         }
       });
+    });
 
-      // Adapter automatiquement la grille selon le nombre de streams
-      const count = activePlayers.length;
-      if (count === 1) streamsContainer.style.gridTemplateColumns = "1fr";
-      else if (count === 2) streamsContainer.style.gridTemplateColumns = "1fr 1fr";
-      else if (count <= 4) streamsContainer.style.gridTemplateColumns = "repeat(2, 1fr)";
-      else streamsContainer.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
-
-      // Ajouter les streams sélectionnés
-      activePlayers.forEach(playerKey => {
-        const player = players[playerKey];
-        const div = document.createElement('div');
-        div.classList.add('stream');
-        div.innerHTML = `
-          <div class="player-label">
-            <img src="${player.flag}" alt="">
-            ${player.name}
-          </div>
-          <iframe
-            src="https://player.twitch.tv/?channel=${player.channel}&parent=kataktis.github.io"
-            allowfullscreen>
-          </iframe>
-        `;
-        div.addEventListener('click', () => {
-          if (div.classList.contains('focused')) {
-            div.classList.remove('focused');
-          } else {
-            document.querySelectorAll('.stream').forEach(s => s.classList.remove('focused'));
-            div.classList.add('focused');
-          }
-        });
-        streamsContainer.appendChild(div);
-      });
-    }
-
-    document.querySelectorAll('.toggle').forEach(t => t.addEventListener('change', updateStreams));
-
-    updateStreams();
+    // Navigation au clavier (← →)
+    document.addEventListener('keydown', (e) => {
+      if (focusedIndex === -1) return;
+      if (e.key === 'ArrowRight') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = (focusedIndex + 1) % povArray.length;
+        povArray[focusedIndex].classList.add('focused');
+      } else if (e.key === 'ArrowLeft') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = (focusedIndex - 1 + povArray.length) % povArray.length;
+        povArray[focusedIndex].classList.add('focused');
+      } else if (e.key === 'Escape') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = -1;
+      }
+    });
   </script>
 </body>
 </html>
-
