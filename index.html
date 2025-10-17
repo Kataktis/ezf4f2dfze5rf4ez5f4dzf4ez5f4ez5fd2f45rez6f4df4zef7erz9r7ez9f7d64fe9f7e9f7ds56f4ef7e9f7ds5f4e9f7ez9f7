@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       display: flex;
       align-items: center;
@@ -20,13 +21,18 @@
       background-color: #b10000;
       box-shadow: 0 0 10px #b10000;
     }
-    header img { height: 50px; }
+
+    header img {
+      height: 50px;
+    }
+
     header h1 {
       margin: 0;
       font-size: 22px;
       text-transform: uppercase;
       letter-spacing: 2px;
     }
+
     .player-selection {
       background-color: #1a1a1a;
       display: flex;
@@ -35,6 +41,7 @@
       border-bottom: 2px solid #b10000;
       padding: 8px;
     }
+
     .player-selection label {
       margin: 5px 10px;
       cursor: pointer;
@@ -42,15 +49,19 @@
       user-select: none;
       display: flex;
       align-items: center;
+      gap: 5px;
     }
+
     .player-selection label img {
       height: 16px;
       width: auto;
-      margin-right: 5px;
-      vertical-align: middle;
       border-radius: 2px;
     }
-    input[type="checkbox"] { margin-right: 5px; }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
     .pov-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -59,17 +70,26 @@
       height: calc(100vh - 160px);
       box-sizing: border-box;
     }
+
     .pov {
       position: relative;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #b10000;
+      background: black;
     }
+
+    .pov iframe, .twitch-embed {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
     .info-bar {
       position: absolute;
       bottom: 8px;
       left: 8px;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.6);
       padding: 4px 8px;
       border-radius: 8px;
       display: flex;
@@ -77,9 +97,14 @@
       gap: 6px;
       font-size: 14px;
       user-select: none;
-      z-index: 10;
     }
-    .info-bar img { height: 16px; border-radius: 2px; }
+
+    .info-bar img {
+      height: 16px;
+      width: auto;
+      border-radius: 2px;
+    }
+
     .focus-btn, .hide-btn {
       background-color: #b10000;
       border: none;
@@ -90,8 +115,15 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .focus-btn:hover, .hide-btn:hover { background-color: #ff0000; }
-    .hide-btn { background-color: #333; margin-left: 5px; }
+
+    .focus-btn:hover, .hide-btn:hover {
+      background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
+    }
+
     .focused {
       position: fixed !important;
       top: 0;
@@ -103,7 +135,11 @@
       box-shadow: 0 0 30px #ff0000;
       background-color: black;
     }
-    .hidden { display: none !important; }
+
+    .hidden {
+      display: none !important;
+    }
+
     footer {
       text-align: center;
       padding: 10px;
@@ -120,54 +156,45 @@
   </header>
 
   <div class="player-selection">
-    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png" alt="🇭🇺"> Erxk</label>
-    <label><input type="checkbox" data-player="haxo" checked><img src="it.png" alt="🇮🇹"> Haxo</label>
-    <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷"> Shin</label>
-    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷"> Yayaz</label>
-    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷"> Nerzox</label>
+    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png"> Erxk</label>
+    <label><input type="checkbox" data-player="haxo" checked><img src="it.png"> Haxo</label>
+    <label><input type="checkbox" data-player="shin" checked><img src="fr.png"> Shin</label>
+    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png"> Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png"> Nerzox</label>
   </div>
 
   <div class="pov-grid">
-    <div class="pov" data-player="erxk">
-      <div id="player-erxk" style="width:100%;height:100%;"></div>
+    <div class="pov" id="player-erxk" data-player="erxk">
       <div class="info-bar">
-        <img src="hu.png" alt="🇭🇺"><span>Erxk</span>
+        <img src="hu.png"><span>Erxk</span>
         <button class="focus-btn" data-focus="erxk">🎯</button>
         <button class="hide-btn" data-hide="erxk">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="haxo">
-      <div id="player-haxo" style="width:100%;height:100%;"></div>
+    <div class="pov" id="player-haxo" data-player="haxo">
       <div class="info-bar">
-        <img src="it.png" alt="🇮🇹"><span>Haxo</span>
+        <img src="it.png"><span>Haxo</span>
         <button class="focus-btn" data-focus="haxo">🎯</button>
         <button class="hide-btn" data-hide="haxo">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="shin">
-      <div id="player-shin" style="width:100%;height:100%;"></div>
+    <div class="pov" id="player-shin" data-player="shin">
       <div class="info-bar">
-        <img src="fr.png" alt="🇫🇷"><span>Shin</span>
+        <img src="fr.png"><span>Shin</span>
         <button class="focus-btn" data-focus="shin">🎯</button>
         <button class="hide-btn" data-hide="shin">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="yayaz">
-      <div id="player-yayaz" style="width:100%;height:100%;"></div>
+    <div class="pov" id="player-yayaz" data-player="yayaz">
       <div class="info-bar">
-        <img src="fr.png" alt="🇫🇷"><span>Yayaz</span>
+        <img src="fr.png"><span>Yayaz</span>
         <button class="focus-btn" data-focus="yayaz">🎯</button>
         <button class="hide-btn" data-hide="yayaz">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="nerzox">
-      <div id="player-nerzox" style="width:100%;height:100%;"></div>
+    <div class="pov" id="player-nerzox" data-player="nerzox">
       <div class="info-bar">
-        <img src="fr.png" alt="🇫🇷"><span>Nerzox</span>
+        <img src="fr.png"><span>Nerzox</span>
         <button class="focus-btn" data-focus="nerzox">🎯</button>
         <button class="hide-btn" data-hide="nerzox">❌</button>
       </div>
@@ -178,93 +205,95 @@
 
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
-    const playerIds = ['erxk','haxo','shin','yayaz','nerzox'];
-    const channels = {
-      'erxk':'erxk0',
-      'haxo':'haxofnbr',
-      'shin':'12shinn',
-      'yayaz':'yayaz_fn',
-      'nerzox':'nerzox35'
+    const players = {
+      erxk: "erxk0",
+      haxo: "haxofnbr",
+      shin: "12shinn",
+      yayaz: "yayaz_fn",
+      nerzox: "nerzox35"
     };
-    const players = {};
+
+    const twitchPlayers = {};
+    const povElements = document.querySelectorAll('.pov');
+    const focusButtons = document.querySelectorAll('.focus-btn');
+    const hideButtons = document.querySelectorAll('.hide-btn');
+    const checkboxes = document.querySelectorAll('.player-selection input');
     let focusedPlayer = null;
 
-    // Création des Twitch players
-    playerIds.forEach(id => {
-      players[id] = new Twitch.Player('player-' + id, {
-        channel: channels[id],
-        width: '100%',
-        height: '100%',
+    // Crée tous les players Twitch
+    for (const key in players) {
+      twitchPlayers[key] = new Twitch.Player(`player-${key}`, {
+        channel: players[key],
+        width: "100%",
+        height: "100%",
         muted: true
       });
-    });
+    }
 
     // Focus
-    function focusPlayer(id) {
-      playerIds.forEach(pid => players[pid].setMuted(true));
-      players[id].setMuted(false);
-      document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
-      document.querySelector(`.pov[data-player="${id}"]`).classList.add('focused');
-      focusedPlayer = id;
-    }
-
-    // Boutons focus
-    document.querySelectorAll('.focus-btn').forEach(btn => {
+    focusButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-focus');
-        if(focusedPlayer === id){
-          players[id].setMuted(true);
-          document.querySelector(`.pov[data-player="${id}"]`).classList.remove('focused');
+        const player = btn.dataset.focus;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+
+        if (pov.classList.contains('focused')) {
+          pov.classList.remove('focused');
           focusedPlayer = null;
-        } else focusPlayer(id);
+          muteAll();
+        } else {
+          document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
+          pov.classList.add('focused');
+          focusedPlayer = player;
+          muteAll();
+          twitchPlayers[player].setMuted(false);
+        }
       });
     });
 
-    // Boutons hide
-    document.querySelectorAll('.hide-btn').forEach(btn => {
+    // Masquer une POV
+    hideButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-hide');
-        document.querySelector(`.pov[data-player="${id}"]`).classList.add('hidden');
-        document.querySelector(`.player-selection input[data-player="${id}"]`).checked = false;
+        const player = btn.dataset.hide;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.add('hidden');
+        document.querySelector(`.player-selection input[data-player="${player}"]`).checked = false;
       });
     });
 
-    // Sélection du haut
-    document.querySelectorAll('.player-selection input').forEach(cb => {
+    // Affichage depuis la sélection
+    checkboxes.forEach(cb => {
       cb.addEventListener('change', () => {
-        const id = cb.getAttribute('data-player');
-        const pov = document.querySelector(`.pov[data-player="${id}"]`);
-        if(cb.checked) pov.classList.remove('hidden');
-        else pov.classList.add('hidden');
+        const player = cb.dataset.player;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.toggle('hidden', !cb.checked);
       });
     });
-
-    // Resize dynamique
-    function resizePOVs(){
-      const visible = document.querySelectorAll('.pov:not(.hidden)');
-      const grid = document.querySelector('.pov-grid');
-      if(visible.length===1) grid.style.gridTemplateColumns='1fr';
-      else if(visible.length===2) grid.style.gridTemplateColumns='1fr 1fr';
-      else if(visible.length<=4) grid.style.gridTemplateColumns='repeat(2,1fr)';
-      else grid.style.gridTemplateColumns='repeat(auto-fit,minmax(400px,1fr))';
-    }
-    window.addEventListener('resize', resizePOVs);
-    resizePOVs();
 
     // Navigation clavier
     document.addEventListener('keydown', e => {
-      if(!focusedPlayer) return;
-      let idx = playerIds.indexOf(focusedPlayer);
-      if(e.key==='ArrowRight') idx=(idx+1)%playerIds.length;
-      else if(e.key==='ArrowLeft') idx=(idx-1+playerIds.length)%playerIds.length;
-      else if(e.key==='Escape'){
-        players[focusedPlayer].setMuted(true);
+      if (!focusedPlayer) return;
+      const keys = Object.keys(players);
+      let index = keys.indexOf(focusedPlayer);
+      if (e.key === 'ArrowRight') index = (index + 1) % keys.length;
+      else if (e.key === 'ArrowLeft') index = (index - 1 + keys.length) % keys.length;
+      else if (e.key === 'Escape') {
         document.querySelector(`.pov[data-player="${focusedPlayer}"]`).classList.remove('focused');
-        focusedPlayer=null;
-        return;
+        focusedPlayer = null;
+        return muteAll();
       }
-      focusPlayer(playerIds[idx]);
+      if (keys[index]) {
+        document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
+        const next = keys[index];
+        document.querySelector(`.pov[data-player="${next}"]`).classList.add('focused');
+        focusedPlayer = next;
+        muteAll();
+        twitchPlayers[next].setMuted(false);
+      }
     });
+
+    function muteAll() {
+      for (const key in twitchPlayers) twitchPlayers[key].setMuted(true);
+    }
   </script>
 </body>
 </html>
