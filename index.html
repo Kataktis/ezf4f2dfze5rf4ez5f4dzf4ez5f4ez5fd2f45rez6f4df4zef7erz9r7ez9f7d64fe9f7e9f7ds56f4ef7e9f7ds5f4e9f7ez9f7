@@ -64,6 +64,14 @@
       background-color: var(--team-red);
     }
 
+    /* ✅ corrige la taille des drapeaux */
+    .player-selection img {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+
     main {
       flex: 1;
       display: grid;
@@ -96,9 +104,10 @@
       font-size: 14px;
     }
 
+    /* ✅ drapeaux POV un peu plus petits */
     .overlay img {
-      width: 20px;
-      height: 14px;
+      width: 18px;
+      height: 12px;
       border-radius: 3px;
     }
 
@@ -150,7 +159,6 @@
     const embeds = {};
 
     players.forEach(player => {
-      // Checkbox de sélection
       const label = document.createElement("label");
       label.innerHTML = `<input type="checkbox" checked> <img src="${player.flag}" alt=""> ${player.name}`;
       const checkbox = label.querySelector("input");
@@ -161,7 +169,6 @@
         else removePOV(player);
       });
 
-      // Par défaut, afficher
       showPOV(player);
     });
 
@@ -208,14 +215,17 @@
 
     function focusPOV(channel) {
       Object.keys(embeds).forEach(ch => {
+        const pov = document.getElementById(`pov-${ch}`);
         if (ch === channel) {
           embeds[ch].setMuted(false);
-          document.getElementById(`pov-${ch}`).style.gridColumn = "1 / -1";
-          document.getElementById(`pov-${ch}`).style.gridRow = "1 / -1";
+          pov.style.gridColumn = "1 / -1";
+          pov.style.gridRow = "1 / -1";
+          pov.style.zIndex = "2";
         } else {
           embeds[ch].setMuted(true);
-          document.getElementById(`pov-${ch}`).style.gridColumn = "";
-          document.getElementById(`pov-${ch}`).style.gridRow = "";
+          pov.style.gridColumn = "";
+          pov.style.gridRow = "";
+          pov.style.zIndex = "1";
         }
       });
     }
