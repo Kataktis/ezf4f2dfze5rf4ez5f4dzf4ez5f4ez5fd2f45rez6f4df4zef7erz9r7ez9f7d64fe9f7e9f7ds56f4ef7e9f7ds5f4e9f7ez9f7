@@ -40,6 +40,15 @@
       cursor: pointer;
       font-weight: bold;
       user-select: none;
+      display: flex;
+      align-items: center;
+    }
+    .player-selection label img {
+      height: 16px;
+      width: auto;
+      margin-right: 5px;
+      vertical-align: middle;
+      border-radius: 2px;
     }
     input[type="checkbox"] { margin-right: 5px; }
     .pov-grid {
@@ -111,11 +120,11 @@
   </header>
 
   <div class="player-selection">
-    <label><input type="checkbox" data-player="erxk" checked> Erxk</label>
-    <label><input type="checkbox" data-player="haxo" checked>🇮🇹 Haxo</label>
+    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png" alt="🇭🇺"> Erxk</label>
+    <label><input type="checkbox" data-player="haxo" checked><img src="it.png" alt="🇮🇹"> Haxo</label>
     <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷"> Shin</label>
-    <label><input type="checkbox" data-player="yayaz" checked>🇫🇷 Yayaz</label>
-    <label><input type="checkbox" data-player="nerzox" checked>🇫🇷 Nerzox</label>
+    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷"> Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷"> Nerzox</label>
   </div>
 
   <div class="pov-grid">
@@ -180,7 +189,7 @@
     const players = {};
     let focusedPlayer = null;
 
-    // Crée les Twitch players
+    // Création des Twitch players
     playerIds.forEach(id => {
       players[id] = new Twitch.Player('player-' + id, {
         channel: channels[id],
@@ -259,4 +268,3 @@
   </script>
 </body>
 </html>
-
