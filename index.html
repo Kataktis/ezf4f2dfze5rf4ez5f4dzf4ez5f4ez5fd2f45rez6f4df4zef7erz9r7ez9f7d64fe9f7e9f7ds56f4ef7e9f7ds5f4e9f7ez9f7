@@ -4,99 +4,104 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kataktis POV Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; transition: all 0.25s ease; }
-
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #1a0000, #000000 80%);
-      color: #f2f2f2;
-      font-family: 'Rajdhani', sans-serif;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0a0a0a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
       overflow-x: hidden;
-      height: 100vh;
     }
 
     header {
-      position: fixed;
-      top: 0;
-      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 10px 30px;
-      background: rgba(10, 10, 10, 0.85);
-      border-bottom: 2px solid #e50914;
-      box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
-      backdrop-filter: blur(10px);
+      background-color: #b10000;
+      box-shadow: 0 0 10px #b10000;
       z-index: 100;
     }
 
-    header img { height: 50px; }
+    header img {
+      height: 50px;
+    }
+
     header h1 {
       margin: 0;
       font-size: 22px;
       text-transform: uppercase;
       letter-spacing: 2px;
-      color: #fff;
+    }
+
+    .page-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .player-selection {
-      position: fixed;
-      top: 70px;
-      width: 100%;
+      background-color: #1a1a1a;
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
-      background: rgba(20, 20, 20, 0.85);
-      border-bottom: 1px solid #e50914;
-      padding: 8px;
-      z-index: 99;
+      justify-content: center;
+      border-bottom: 2px solid #b10000;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
     }
 
     .player-selection label {
-      margin: 5px 12px;
+      margin: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
       display: flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 15px;
-      color: #fff;
     }
 
-    .player-selection img { height: 16px; border-radius: 2px; }
-    input[type="checkbox"] { accent-color: #e50914; cursor: pointer; }
+    .player-selection img {
+      height: 18px;
+      border-radius: 3px;
+    }
+
+    input[type="checkbox"] {
+      accent-color: #b10000;
+      transform: scale(1.2);
+    }
 
     .pov-grid {
+      flex: 1;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-      grid-auto-rows: 1fr;
-      gap: 15px;
-      padding: 160px 20px 40px;
-      height: calc(100vh - 160px);
+      gap: 12px;
+      padding: 15px;
+      transition: all 0.3s ease;
     }
 
     .pov {
       position: relative;
-      width: 100%;
-      height: 100%;
-      background: rgba(20, 20, 20, 0.85);
-      border: 2px solid rgba(229, 9, 20, 0.5);
-      box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
+      border: 2px solid #b10000;
+      background: black;
       display: flex;
       flex-direction: column;
       transition: all 0.3s ease;
     }
 
-    .pov:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      flex: 1;
     }
-
-    iframe { width: 100%; height: 100%; border: none; }
 
     .info-bar {
       position: absolute;
@@ -109,12 +114,17 @@
       align-items: center;
       gap: 6px;
       font-size: 14px;
+      user-select: none;
     }
 
-    .info-bar img { height: 16px; border-radius: 2px; }
+    .info-bar img {
+      height: 16px;
+      width: auto;
+      border-radius: 2px;
+    }
 
     .focus-btn, .hide-btn {
-      background-color: #e50914;
+      background-color: #b10000;
       border: none;
       color: white;
       font-size: 12px;
@@ -124,8 +134,14 @@
       transition: 0.2s;
     }
 
-    .focus-btn:hover, .hide-btn:hover { background-color: #ff1a1a; }
-    .hide-btn { background-color: #333; margin-left: 5px; }
+    .focus-btn:hover, .hide-btn:hover {
+      background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
+      margin-left: 5px;
+    }
 
     .focused {
       position: fixed !important;
@@ -135,18 +151,20 @@
       height: 100vh !important;
       z-index: 200;
       border: 3px solid #ff0000;
-      box-shadow: 0 0 40px #ff0000;
+      box-shadow: 0 0 30px #ff0000;
       background-color: black;
     }
 
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     footer {
       text-align: center;
-      padding: 12px;
+      padding: 10px;
       font-size: 13px;
-      background-color: #111;
-      border-top: 2px solid #e50914;
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
     }
   </style>
 </head>
@@ -156,53 +174,71 @@
     <h1>Kataktis POV Manager</h1>
   </header>
 
-  <div class="player-selection">
-    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png" alt="🇭🇺">Erxk</label>
-    <label><input type="checkbox" data-player="haxo" checked><img src="it.png" alt="🇮🇹">Haxo</label>
-    <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷">Shin</label>
-    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷">Yayaz</label>
-    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷">Nerzox</label>
+  <div class="page-wrapper">
+    <div class="player-selection">
+      <label><input type="checkbox" data-player="erxk" checked><img src="hu.png">Erxk</label>
+      <label><input type="checkbox" data-player="haxo" checked><img src="it.png">Haxo</label>
+      <label><input type="checkbox" data-player="shin" checked><img src="fr.png">Shin</label>
+      <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png">Yayaz</label>
+      <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png">Nerzox</label>
+    </div>
+
+    <div class="pov-grid">
+      <div class="pov" data-player="erxk">
+        <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="hu.png" alt="🇭🇺">
+          <span>Erxk</span>
+          <button class="focus-btn" data-focus="erxk">🎯</button>
+          <button class="hide-btn" data-hide="erxk">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="haxo">
+        <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="it.png" alt="🇮🇹">
+          <span>Haxo</span>
+          <button class="focus-btn" data-focus="haxo">🎯</button>
+          <button class="hide-btn" data-hide="haxo">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="shin">
+        <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Shin</span>
+          <button class="focus-btn" data-focus="shin">🎯</button>
+          <button class="hide-btn" data-hide="shin">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="yayaz">
+        <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Yayaz</span>
+          <button class="focus-btn" data-focus="yayaz">🎯</button>
+          <button class="hide-btn" data-hide="yayaz">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="nerzox">
+        <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Nerzox</span>
+          <button class="focus-btn" data-focus="nerzox">🎯</button>
+          <button class="hide-btn" data-hide="nerzox">❌</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="pov-grid">
-    <div class="pov" data-player="erxk">
-      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="info-bar"><img src="hu.png"><span>Erxk</span>
-        <button class="focus-btn" data-focus="erxk">🎯</button>
-        <button class="hide-btn" data-hide="erxk">❌</button>
-      </div>
-    </div>
-    <div class="pov" data-player="haxo">
-      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="info-bar"><img src="it.png"><span>Haxo</span>
-        <button class="focus-btn" data-focus="haxo">🎯</button>
-        <button class="hide-btn" data-hide="haxo">❌</button>
-      </div>
-    </div>
-    <div class="pov" data-player="shin">
-      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="info-bar"><img src="fr.png"><span>Shin</span>
-        <button class="focus-btn" data-focus="shin">🎯</button>
-        <button class="hide-btn" data-hide="shin">❌</button>
-      </div>
-    </div>
-    <div class="pov" data-player="yayaz">
-      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="info-bar"><img src="fr.png"><span>Yayaz</span>
-        <button class="focus-btn" data-focus="yayaz">🎯</button>
-        <button class="hide-btn" data-hide="yayaz">❌</button>
-      </div>
-    </div>
-    <div class="pov" data-player="nerzox">
-      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="info-bar"><img src="fr.png"><span>Nerzox</span>
-        <button class="focus-btn" data-focus="nerzox">🎯</button>
-        <button class="hide-btn" data-hide="nerzox">❌</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>Kataktis eSport - Interface Staff POV</footer>
+  <footer>
+    Kataktis eSport - Interface Staff POV
+  </footer>
 
   <script>
     const povs = document.querySelectorAll('.pov');
@@ -215,10 +251,7 @@
     function resizePOVs() {
       const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
-      if (visiblePOVs.length === 1) grid.style.gridTemplateColumns = '1fr';
-      else if (visiblePOVs.length === 2) grid.style.gridTemplateColumns = '1fr 1fr';
-      else if (visiblePOVs.length <= 4) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-      else grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(0, 1fr))';
+      grid.style.gridTemplateColumns = `repeat(${Math.min(visiblePOVs.length, 3)}, 1fr)`;
     }
 
     focusButtons.forEach(btn => {
@@ -228,13 +261,13 @@
         if (pov.classList.contains('focused')) {
           pov.classList.remove('focused');
           focusedIndex = -1;
-          muteAllPOVs(true);
+          muteAll(true);
         } else {
           povs.forEach(p => p.classList.remove('focused'));
           pov.classList.add('focused');
           focusedIndex = povArray.indexOf(pov);
-          muteAllPOVs(true);
-          unmutePOV(pov);
+          muteAll(true);
+          mutePOV(pov, false);
         }
       });
     });
@@ -253,28 +286,29 @@
       cb.addEventListener('change', () => {
         const player = cb.getAttribute('data-player');
         const pov = document.querySelector(`.pov[data-player="${player}"]`);
-        cb.checked ? pov.classList.remove('hidden') : pov.classList.add('hidden');
+        pov.classList.toggle('hidden', !cb.checked);
         resizePOVs();
       });
     });
 
-    function muteAllPOVs(mute = true) {
-      povArray.forEach(pov => {
-        const iframe = pov.querySelector('iframe');
-        const src = new URL(iframe.src);
-        src.searchParams.set('muted', mute ? 'true' : 'false');
-        iframe.src = src.toString();
-      });
-    }
+    document.addEventListener('keydown', e => {
+      if (focusedIndex === -1) return;
+      if (e.key === 'Escape') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = -1;
+        muteAll(true);
+      }
+    });
 
-    function unmutePOV(pov) {
+    function mutePOV(pov, mute) {
       const iframe = pov.querySelector('iframe');
-      const src = new URL(iframe.src);
-      src.searchParams.set('muted', 'false');
-      iframe.src = src.toString();
+      iframe.contentWindow.postMessage({ event: "command", func: "setMuted", args: [mute] }, "*");
     }
 
-    window.addEventListener('resize', resizePOVs);
+    function muteAll(mute = true) {
+      povArray.forEach(p => mutePOV(p, mute));
+    }
+
     resizePOVs();
   </script>
 </body>
