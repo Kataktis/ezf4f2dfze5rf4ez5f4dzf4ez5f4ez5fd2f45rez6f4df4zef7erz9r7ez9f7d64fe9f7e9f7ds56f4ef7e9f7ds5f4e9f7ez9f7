@@ -3,87 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kataktis POV Viewer</title>
+  <title>Kataktis POV Manager</title>
   <style>
     body {
-      margin: 0;
-      background-color: #0b0b0b;
+      background-color: #0a0a0a;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     header {
-      background-color: #b30000;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
+      padding: 10px 30px;
+      background-color: #b10000;
+      box-shadow: 0 0 10px #b10000;
     }
 
-    header img.logo {
-      height: 40px;
+    header img {
+      height: 50px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .player-selection {
+      background-color: #1a1a1a;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+      justify-content: center;
+      border-bottom: 2px solid #b10000;
+      padding: 8px;
     }
 
     .player-selection label {
+      margin: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
       display: flex;
       align-items: center;
-      background-color: #1a1a1a;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
+      gap: 5px;
     }
 
-    .player-selection label:hover {
-      background-color: #292929;
-    }
-
-    .player-selection input {
-      margin-right: 6px;
-    }
-
-    .player-selection img {
+    .player-selection label img {
       height: 16px;
       width: auto;
-      margin-right: 6px;
-      border-radius: 3px;
+      border-radius: 2px;
     }
 
-    .grid {
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    .pov-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 10px;
       padding: 10px;
-      transition: 0.3s;
+      height: calc(100vh - 160px);
+      box-sizing: border-box;
     }
 
     .pov {
       position: relative;
-      background-color: #000;
       border-radius: 10px;
       overflow: hidden;
-      aspect-ratio: 16 / 9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 2px solid #b10000;
+      background: black;
     }
 
-    .pov iframe {
+    .pov iframe, .twitch-embed {
       width: 100%;
       height: 100%;
       border: none;
     }
 
-    .pov-info {
+    .info-bar {
       position: absolute;
-      top: 8px;
+      bottom: 8px;
       left: 8px;
       background: rgba(0, 0, 0, 0.6);
       padding: 4px 8px;
@@ -92,30 +96,32 @@
       align-items: center;
       gap: 6px;
       font-size: 14px;
+      user-select: none;
     }
 
-    .pov-info img {
-      height: 14px;
+    .info-bar img {
+      height: 16px;
       width: auto;
       border-radius: 2px;
     }
 
-    .focus-btn {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(179, 0, 0, 0.8);
+    .focus-btn, .hide-btn {
+      background-color: #b10000;
       border: none;
       color: white;
-      padding: 6px 10px;
-      border-radius: 6px;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 13px;
       transition: 0.2s;
     }
 
-    .focus-btn:hover {
-      background: rgba(255, 0, 0, 0.9);
+    .focus-btn:hover, .hide-btn:hover {
+      background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
     }
 
     .focused {
@@ -124,82 +130,170 @@
       left: 0;
       width: 100vw !important;
       height: 100vh !important;
-      z-index: 1000;
-      border-radius: 0;
+      z-index: 100;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 30px #ff0000;
+      background-color: black;
     }
 
-    .focused .focus-btn {
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255, 0, 0, 0.9);
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" class="logo" alt="Team Logo">
-    <div class="player-selection">
-      <label><input type="checkbox" data-player="domingo" checked><img src="fr.png"> Domingo</label>
-      <label><input type="checkbox" data-player="terracid" checked><img src="fr.png"> Terracid</label>
-      <label><input type="checkbox" data-player="sardoche" checked><img src="fr.png"> Sardoche</label>
-      <label><input type="checkbox" data-player="siphano" checked><img src="fr.png"> Siphano</label>
-      <label><input type="checkbox" data-player="gotaga" checked><img src="fr.png"> Gotaga</label>
-    </div>
+    <img src="logo.png" alt="Logo Team">
+    <h1>Kataktis POV Manager</h1>
   </header>
 
-  <div class="grid" id="grid"></div>
+  <div class="player-selection">
+    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png"> Erxk</label>
+    <label><input type="checkbox" data-player="haxo" checked><img src="it.png"> Haxo</label>
+    <label><input type="checkbox" data-player="shin" checked><img src="fr.png"> Shin</label>
+    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png"> Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png"> Nerzox</label>
+  </div>
+
+  <div class="pov-grid">
+    <div class="pov" id="player-erxk" data-player="erxk">
+      <div class="info-bar">
+        <img src="hu.png"><span>Erxk</span>
+        <button class="focus-btn" data-focus="erxk">🎯</button>
+        <button class="hide-btn" data-hide="erxk">❌</button>
+      </div>
+    </div>
+    <div class="pov" id="player-haxo" data-player="haxo">
+      <div class="info-bar">
+        <img src="it.png"><span>Haxo</span>
+        <button class="focus-btn" data-focus="haxo">🎯</button>
+        <button class="hide-btn" data-hide="haxo">❌</button>
+      </div>
+    </div>
+    <div class="pov" id="player-shin" data-player="shin">
+      <div class="info-bar">
+        <img src="fr.png"><span>Shin</span>
+        <button class="focus-btn" data-focus="shin">🎯</button>
+        <button class="hide-btn" data-hide="shin">❌</button>
+      </div>
+    </div>
+    <div class="pov" id="player-yayaz" data-player="yayaz">
+      <div class="info-bar">
+        <img src="fr.png"><span>Yayaz</span>
+        <button class="focus-btn" data-focus="yayaz">🎯</button>
+        <button class="hide-btn" data-hide="yayaz">❌</button>
+      </div>
+    </div>
+    <div class="pov" id="player-nerzox" data-player="nerzox">
+      <div class="info-bar">
+        <img src="fr.png"><span>Nerzox</span>
+        <button class="focus-btn" data-focus="nerzox">🎯</button>
+        <button class="hide-btn" data-hide="nerzox">❌</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Kataktis eSport - Interface Staff POV</footer>
 
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
     const players = {
-      domingo: { name: "Domingo", country: "fr.png", channel: "domingo" },
-      terracid: { name: "Terracid", country: "fr.png", channel: "terracid" },
-      sardoche: { name: "Sardoche", country: "fr.png", channel: "sardoche" },
-      siphano: { name: "Siphano", country: "fr.png", channel: "siphano" },
-      gotaga: { name: "Gotaga", country: "fr.png", channel: "gotaga" },
+      erxk: "erxk0",
+      haxo: "haxofnbr",
+      shin: "12shinn",
+      yayaz: "yayaz_fn",
+      nerzox: "nerzox35"
     };
 
-    const grid = document.getElementById("grid");
+    const twitchPlayers = {};
+    const povElements = document.querySelectorAll('.pov');
+    const focusButtons = document.querySelectorAll('.focus-btn');
+    const hideButtons = document.querySelectorAll('.hide-btn');
+    const checkboxes = document.querySelectorAll('.player-selection input');
+    let focusedPlayer = null;
 
-    function renderPlayers() {
-      grid.innerHTML = "";
-      const checked = [...document.querySelectorAll(".player-selection input:checked")].map(i => i.dataset.player);
-      checked.forEach(key => {
-        const p = players[key];
-        const pov = document.createElement("div");
-        pov.className = "pov";
-        pov.innerHTML = `
-          <div class="pov-info">
-            <img src="${p.country}">
-            <span>${p.name}</span>
-          </div>
-          <div id="twitch-${key}"></div>
-          <button class="focus-btn">Focus</button>
-        `;
-        grid.appendChild(pov);
-
-        const player = new Twitch.Player(`twitch-${key}`, {
-          channel: p.channel,
-          width: "100%",
-          height: "100%",
-          parent: [window.location.hostname]
-        });
-
-        const btn = pov.querySelector(".focus-btn");
-        btn.addEventListener("click", () => {
-          if (pov.classList.contains("focused")) {
-            pov.classList.remove("focused");
-            document.querySelectorAll(".pov iframe").forEach(f => f.contentWindow.postMessage({ event: "command", func: "mute" }, "*"));
-          } else {
-            document.querySelectorAll(".pov").forEach(el => el.classList.remove("focused"));
-            pov.classList.add("focused");
-          }
-        });
+    // Crée tous les players Twitch
+    for (const key in players) {
+      twitchPlayers[key] = new Twitch.Player(`player-${key}`, {
+        channel: players[key],
+        width: "100%",
+        height: "100%",
+        muted: true
       });
     }
 
-    document.querySelectorAll(".player-selection input").forEach(i => i.addEventListener("change", renderPlayers));
-    renderPlayers();
+    // Focus
+    focusButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.dataset.focus;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+
+        if (pov.classList.contains('focused')) {
+          pov.classList.remove('focused');
+          focusedPlayer = null;
+          muteAll();
+        } else {
+          document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
+          pov.classList.add('focused');
+          focusedPlayer = player;
+          muteAll();
+          twitchPlayers[player].setMuted(false);
+        }
+      });
+    });
+
+    // Masquer une POV
+    hideButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.dataset.hide;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.add('hidden');
+        document.querySelector(`.player-selection input[data-player="${player}"]`).checked = false;
+      });
+    });
+
+    // Affichage depuis la sélection
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const player = cb.dataset.player;
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.toggle('hidden', !cb.checked);
+      });
+    });
+
+    // Navigation clavier
+    document.addEventListener('keydown', e => {
+      if (!focusedPlayer) return;
+      const keys = Object.keys(players);
+      let index = keys.indexOf(focusedPlayer);
+      if (e.key === 'ArrowRight') index = (index + 1) % keys.length;
+      else if (e.key === 'ArrowLeft') index = (index - 1 + keys.length) % keys.length;
+      else if (e.key === 'Escape') {
+        document.querySelector(`.pov[data-player="${focusedPlayer}"]`).classList.remove('focused');
+        focusedPlayer = null;
+        return muteAll();
+      }
+      if (keys[index]) {
+        document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
+        const next = keys[index];
+        document.querySelector(`.pov[data-player="${next}"]`).classList.add('focused');
+        focusedPlayer = next;
+        muteAll();
+        twitchPlayers[next].setMuted(false);
+      }
+    });
+
+    function muteAll() {
+      for (const key in twitchPlayers) twitchPlayers[key].setMuted(true);
+    }
   </script>
 </body>
 </html>
