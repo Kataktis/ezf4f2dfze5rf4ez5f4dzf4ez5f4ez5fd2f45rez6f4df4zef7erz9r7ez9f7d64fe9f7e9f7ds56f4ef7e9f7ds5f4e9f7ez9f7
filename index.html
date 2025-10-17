@@ -33,12 +33,32 @@
       letter-spacing: 2px;
     }
 
+    .player-selection {
+      background-color: #1a1a1a;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 2px solid #b10000;
+      padding: 8px;
+    }
+
+    .player-selection label {
+      margin: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
     .pov-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 10px;
       padding: 10px;
-      height: calc(100vh - 100px);
+      height: calc(100vh - 160px);
       box-sizing: border-box;
     }
 
@@ -76,7 +96,7 @@
       border-radius: 2px;
     }
 
-    .focus-btn {
+    .focus-btn, .hide-btn {
       background-color: #b10000;
       border: none;
       color: white;
@@ -87,8 +107,13 @@
       transition: 0.2s;
     }
 
-    .focus-btn:hover {
+    .focus-btn:hover, .hide-btn:hover {
       background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
+      margin-left: 5px;
     }
 
     .focused {
@@ -122,6 +147,14 @@
     <h1>Kataktis POV Manager</h1>
   </header>
 
+  <div class="player-selection">
+    <label><input type="checkbox" data-player="erxk" checked>🇭🇺 Erxk</label>
+    <label><input type="checkbox" data-player="haxo" checked>🇮🇹 Haxo</label>
+    <label><input type="checkbox" data-player="shin" checked>🇫🇷 Shin</label>
+    <label><input type="checkbox" data-player="yayaz" checked>🇫🇷 Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked>🇫🇷 Nerzox</label>
+  </div>
+
   <div class="pov-grid">
     <div class="pov" data-player="erxk">
       <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
@@ -129,6 +162,7 @@
         <img src="flags/hu.png" alt="🇭🇺">
         <span>Erxk</span>
         <button class="focus-btn" data-focus="erxk">🎯</button>
+        <button class="hide-btn" data-hide="erxk">❌</button>
       </div>
     </div>
 
@@ -138,6 +172,7 @@
         <img src="flags/it.png" alt="🇮🇹">
         <span>Haxo</span>
         <button class="focus-btn" data-focus="haxo">🎯</button>
+        <button class="hide-btn" data-hide="haxo">❌</button>
       </div>
     </div>
 
@@ -147,6 +182,7 @@
         <img src="flags/fr.png" alt="🇫🇷">
         <span>Shin</span>
         <button class="focus-btn" data-focus="shin">🎯</button>
+        <button class="hide-btn" data-hide="shin">❌</button>
       </div>
     </div>
 
@@ -156,6 +192,7 @@
         <img src="flags/fr.png" alt="🇫🇷">
         <span>Yayaz</span>
         <button class="focus-btn" data-focus="yayaz">🎯</button>
+        <button class="hide-btn" data-hide="yayaz">❌</button>
       </div>
     </div>
 
@@ -165,6 +202,7 @@
         <img src="flags/fr.png" alt="🇫🇷">
         <span>Nerzox</span>
         <button class="focus-btn" data-focus="nerzox">🎯</button>
+        <button class="hide-btn" data-hide="nerzox">❌</button>
       </div>
     </div>
   </div>
@@ -175,10 +213,13 @@
 
   <script>
     const povs = document.querySelectorAll('.pov');
+    const checkboxes = document.querySelectorAll('.player-selection input');
     const focusButtons = document.querySelectorAll('[data-focus]');
+    const hideButtons = document.querySelectorAll('[data-hide]');
     let focusedIndex = -1;
     const povArray = Array.from(povs);
 
+    // Resize dynamique
     function resizePOVs() {
       const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
@@ -188,6 +229,7 @@
       else grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(400px, 1fr))';
     }
 
+    // Focus (🎯)
     focusButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const player = btn.getAttribute('data-focus');
@@ -206,6 +248,30 @@
       });
     });
 
+    // Cache une POV
+    hideButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-hide');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.add('hidden');
+        const checkbox = document.querySelector(`.player-selection input[data-player="${player}"]`);
+        checkbox.checked = false;
+        resizePOVs();
+      });
+    });
+
+    // Réaffiche une POV depuis la sélection du haut
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const player = cb.getAttribute('data-player');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        if (cb.checked) pov.classList.remove('hidden');
+        else pov.classList.add('hidden');
+        resizePOVs();
+      });
+    });
+
+    // Navigation clavier
     document.addEventListener('keydown', (e) => {
       if (focusedIndex === -1) return;
       if (e.key === 'ArrowRight') changeFocus(1);
@@ -246,4 +312,3 @@
   </script>
 </body>
 </html>
-
