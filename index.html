@@ -61,9 +61,6 @@
       position: relative;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s ease;
     }
 
     iframe {
@@ -72,17 +69,6 @@
       border: 2px solid #b10000;
       border-radius: 10px;
       object-fit: cover;
-      pointer-events: none;
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 5;
-      cursor: pointer;
     }
 
     .focused {
@@ -95,11 +81,6 @@
       border: 3px solid #ff0000;
       box-shadow: 0 0 30px #ff0000;
       background-color: black;
-      cursor: default;
-    }
-
-    .focused iframe {
-      pointer-events: auto;
     }
 
     .hidden {
@@ -127,39 +108,23 @@
     <label><input type="checkbox" checked data-player="shin"> 🇫🇷 Shin (Officiel)</label>
     <label><input type="checkbox" checked data-player="yayaz"> 🇫🇷 Yayaz (Académique)</label>
     <label><input type="checkbox" checked data-player="nerzox"> 🇫🇷 Nerzox (Académique)</label>
-    <label><input type="checkbox" checked data-player="bonus1"> 🇺🇸 Bonus1 (Test)</label>
-    <label><input type="checkbox" checked data-player="bonus2"> 🇩🇪 Bonus2 (Test)</label>
   </div>
 
   <div class="pov-grid">
     <div class="pov" data-player="erxk">
-      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
+      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="haxo">
-      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
+      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="shin">
-      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
+      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="yayaz">
-      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
+      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
     <div class="pov" data-player="nerzox">
-      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
-    </div>
-    <!-- 🎥 Streamers bonus de test -->
-    <div class="pov" data-player="bonus1">
-      <iframe src="https://player.twitch.tv/?channel=riotgames&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
-    </div>
-    <div class="pov" data-player="bonus2">
-      <iframe src="https://player.twitch.tv/?channel=shroud&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
-      <div class="overlay"></div>
+      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -170,10 +135,10 @@
   <script>
     const checkboxes = document.querySelectorAll('.player-selection input');
     const povs = document.querySelectorAll('.pov');
-    const overlays = document.querySelectorAll('.overlay');
-    const povArray = Array.from(povs);
     let focusedIndex = -1;
+    const povArray = Array.from(povs);
 
+    // Affichage / masquage des POV selon la sélection
     function resizePOVs() {
       const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
@@ -188,22 +153,6 @@
       }
     }
 
-    function muteAll() {
-      povs.forEach(pov => {
-        const iframe = pov.querySelector('iframe');
-        const src = new URL(iframe.src);
-        src.searchParams.set('muted', 'true');
-        iframe.src = src.toString();
-      });
-    }
-
-    function unmute(pov) {
-      const iframe = pov.querySelector('iframe');
-      const src = new URL(iframe.src);
-      src.searchParams.set('muted', 'false');
-      iframe.src = src.toString();
-    }
-
     checkboxes.forEach(cb => {
       cb.addEventListener('change', () => {
         const player = cb.getAttribute('data-player');
@@ -214,18 +163,14 @@
       });
     });
 
-    overlays.forEach((overlay, index) => {
-      overlay.addEventListener('click', () => {
-        const pov = povs[index];
+    povs.forEach((pov, index) => {
+      pov.addEventListener('click', () => {
         if (pov.classList.contains('focused')) {
           pov.classList.remove('focused');
-          muteAll();
           focusedIndex = -1;
         } else {
           povs.forEach(p => p.classList.remove('focused'));
-          muteAll();
           pov.classList.add('focused');
-          unmute(pov);
           focusedIndex = index;
         }
       });
@@ -236,18 +181,13 @@
       if (e.key === 'ArrowRight') {
         povArray[focusedIndex].classList.remove('focused');
         focusedIndex = (focusedIndex + 1) % povArray.length;
-        muteAll();
         povArray[focusedIndex].classList.add('focused');
-        unmute(povArray[focusedIndex]);
       } else if (e.key === 'ArrowLeft') {
         povArray[focusedIndex].classList.remove('focused');
         focusedIndex = (focusedIndex - 1 + povArray.length) % povArray.length;
-        muteAll();
         povArray[focusedIndex].classList.add('focused');
-        unmute(povArray[focusedIndex]);
       } else if (e.key === 'Escape') {
         povArray[focusedIndex].classList.remove('focused');
-        muteAll();
         focusedIndex = -1;
       }
     });
