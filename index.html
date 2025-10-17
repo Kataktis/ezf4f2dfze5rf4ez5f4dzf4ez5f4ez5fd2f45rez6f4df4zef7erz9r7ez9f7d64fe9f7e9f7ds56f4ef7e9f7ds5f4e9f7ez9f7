@@ -127,6 +127,8 @@
     <label><input type="checkbox" checked data-player="shin"> 🇫🇷 Shin (Officiel)</label>
     <label><input type="checkbox" checked data-player="yayaz"> 🇫🇷 Yayaz (Académique)</label>
     <label><input type="checkbox" checked data-player="nerzox"> 🇫🇷 Nerzox (Académique)</label>
+    <label><input type="checkbox" checked data-player="bonus1"> 🇺🇸 Bonus1 (Test)</label>
+    <label><input type="checkbox" checked data-player="bonus2"> 🇩🇪 Bonus2 (Test)</label>
   </div>
 
   <div class="pov-grid">
@@ -150,6 +152,15 @@
       <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
       <div class="overlay"></div>
     </div>
+    <!-- 🎥 Streamers bonus de test -->
+    <div class="pov" data-player="bonus1">
+      <iframe src="https://player.twitch.tv/?channel=riotgames&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+      <div class="overlay"></div>
+    </div>
+    <div class="pov" data-player="bonus2">
+      <iframe src="https://player.twitch.tv/?channel=shroud&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+      <div class="overlay"></div>
+    </div>
   </div>
 
   <footer>
@@ -163,7 +174,6 @@
     const povArray = Array.from(povs);
     let focusedIndex = -1;
 
-    // Fonction de redimensionnement dynamique
     function resizePOVs() {
       const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
@@ -178,7 +188,6 @@
       }
     }
 
-    // Fonction pour muter/démuter
     function muteAll() {
       povs.forEach(pov => {
         const iframe = pov.querySelector('iframe');
