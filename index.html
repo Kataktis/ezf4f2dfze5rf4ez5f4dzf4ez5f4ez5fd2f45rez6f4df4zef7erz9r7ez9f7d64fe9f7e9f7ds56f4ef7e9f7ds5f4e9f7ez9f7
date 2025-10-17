@@ -4,294 +4,312 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kataktis POV Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       margin: 0;
       padding: 0;
-      font-family: 'Rajdhani', sans-serif;
-    }
-
-    body {
-      background-color: #0d0d0d;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0a0a0a;
       color: white;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background-color: #1a1a1a;
-      padding: 10px 20px;
-      border-bottom: 3px solid #ff0000;
+      padding: 10px 30px;
+      background-color: #b10000;
+      box-shadow: 0 0 10px #b10000;
+      z-index: 100;
     }
 
     header img {
       height: 50px;
     }
 
-    .title {
-      font-size: 1.8em;
-      color: #ff0000;
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      text-transform: uppercase;
       letter-spacing: 2px;
     }
 
-    .player-selection {
+    .page-wrapper {
+      flex: 1;
       display: flex;
-      gap: 10px;
-      align-items: center;
+      flex-direction: column;
+    }
+
+    .player-selection {
+      background-color: #1a1a1a;
+      display: flex;
       flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 2px solid #b10000;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
     }
 
     .player-selection label {
+      margin: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
       display: flex;
       align-items: center;
-      background: #262626;
-      padding: 5px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .player-selection label:hover {
-      background: #ff0000;
+      gap: 6px;
     }
 
     .player-selection img {
-      width: 20px;
-      height: 14px;
-      margin-right: 6px;
-      border-radius: 2px;
+      height: 18px;
+      border-radius: 3px;
     }
 
-    main {
+    input[type="checkbox"] {
+      accent-color: #b10000;
+      transform: scale(1.2);
+    }
+
+    .pov-grid {
       flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-
-    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-      grid-auto-rows: 1fr;
-      gap: 10px;
-      width: 100%;
-      height: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 12px;
+      padding: 15px;
+      transition: all 0.3s ease;
     }
 
     .pov {
       position: relative;
-      background: black;
-      border: 2px solid #ff0000;
       border-radius: 10px;
       overflow: hidden;
+      border: 2px solid #b10000;
+      background: black;
+      display: flex;
+      flex-direction: column;
       transition: all 0.3s ease;
     }
 
-    .pov iframe {
+    iframe {
       width: 100%;
       height: 100%;
+      border: none;
+      flex: 1;
     }
 
-    .pov-info {
+    .info-bar {
       position: absolute;
       bottom: 8px;
       left: 8px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       padding: 4px 8px;
-      border-radius: 5px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 14px;
+      user-select: none;
     }
 
-    .pov-info img {
-      width: 20px;
-      height: 14px;
+    .info-bar img {
+      height: 16px;
+      width: auto;
       border-radius: 2px;
     }
 
-    .focus {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 10;
-      background: black;
-    }
-
-    .focus iframe {
-      width: 100%;
-      height: 100%;
-    }
-
-    footer {
-      background-color: #1a1a1a;
-      border-top: 3px solid #ff0000;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.9em;
-      color: #aaa;
-      margin-top: auto;
-    }
-
-    button.focus-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255, 0, 0, 0.7);
+    .focus-btn, .hide-btn {
+      background-color: #b10000;
       border: none;
       color: white;
-      padding: 5px 8px;
+      font-size: 12px;
+      padding: 2px 6px;
       border-radius: 5px;
       cursor: pointer;
       transition: 0.2s;
     }
 
-    button.focus-btn:hover {
-      background: rgba(255, 0, 0, 1);
+    .focus-btn:hover, .hide-btn:hover {
+      background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
+      margin-left: 5px;
+    }
+
+    .focused {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 200;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 30px #ff0000;
+      background-color: black;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo-title">
-      <img src="logo.png" alt="Logo Kataktis">
-    </div>
-    <div class="title">KATAKTIS POV MANAGER</div>
-    <div class="player-selection" id="playerSelection"></div>
+    <img src="logo.png" alt="Logo Team">
+    <h1>Kataktis POV Manager</h1>
   </header>
 
-  <main>
-    <div class="grid" id="povGrid"></div>
-  </main>
+  <div class="page-wrapper">
+    <div class="player-selection">
+      <label><input type="checkbox" data-player="erxk" checked><img src="hu.png">Erxk</label>
+      <label><input type="checkbox" data-player="haxo" checked><img src="it.png">Haxo</label>
+      <label><input type="checkbox" data-player="shin" checked><img src="fr.png">Shin</label>
+      <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png">Yayaz</label>
+      <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png">Nerzox</label>
+    </div>
+
+    <div class="pov-grid">
+      <div class="pov" data-player="erxk">
+        <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="hu.png" alt="🇭🇺">
+          <span>Erxk</span>
+          <button class="focus-btn" data-focus="erxk">🎯</button>
+          <button class="hide-btn" data-hide="erxk">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="haxo">
+        <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="it.png" alt="🇮🇹">
+          <span>Haxo</span>
+          <button class="focus-btn" data-focus="haxo">🎯</button>
+          <button class="hide-btn" data-hide="haxo">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="shin">
+        <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Shin</span>
+          <button class="focus-btn" data-focus="shin">🎯</button>
+          <button class="hide-btn" data-hide="shin">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="yayaz">
+        <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Yayaz</span>
+          <button class="focus-btn" data-focus="yayaz">🎯</button>
+          <button class="hide-btn" data-hide="yayaz">❌</button>
+        </div>
+      </div>
+
+      <div class="pov" data-player="nerzox">
+        <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true" allowfullscreen></iframe>
+        <div class="info-bar">
+          <img src="fr.png" alt="🇫🇷">
+          <span>Nerzox</span>
+          <button class="focus-btn" data-focus="nerzox">🎯</button>
+          <button class="hide-btn" data-hide="nerzox">❌</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer>
-    © 2025 Kataktis Esport — Interface Staff Only
+    Kataktis eSport - Interface Staff POV
   </footer>
 
-  <script src="https://embed.twitch.tv/embed/v1.js"></script>
   <script>
-    const players = [
-      { name: "Erxk", country: "hu", twitch: "erxk0" },
-      { name: "Haxo", country: "it", twitch: "haxofnbr" },
-      { name: "Shin", country: "fr", twitch: "12shinn" },
-      { name: "Yayaz", country: "fr", twitch: "yayaz_fn" },
-      { name: "Nerzox", country: "fr", twitch: "nerzox35" }
-    ];
+    const povs = document.querySelectorAll('.pov');
+    const checkboxes = document.querySelectorAll('.player-selection input');
+    const focusButtons = document.querySelectorAll('[data-focus]');
+    const hideButtons = document.querySelectorAll('[data-hide]');
+    let focusedIndex = -1;
+    const povArray = Array.from(povs);
 
-    const grid = document.getElementById("povGrid");
-    const selection = document.getElementById("playerSelection");
-    let activePlayers = new Set(players.map(p => p.name));
-    let focusedPlayer = null;
-
-    function renderSelection() {
-      selection.innerHTML = "";
-      players.forEach(p => {
-        const label = document.createElement("label");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = activePlayers.has(p.name);
-        checkbox.addEventListener("change", () => {
-          if (checkbox.checked) activePlayers.add(p.name);
-          else activePlayers.delete(p.name);
-          renderGrid();
-        });
-
-        const flag = document.createElement("img");
-        flag.src = `${p.country}.png`;
-
-        label.appendChild(flag);
-        label.appendChild(document.createTextNode(p.name));
-        label.appendChild(checkbox);
-        selection.appendChild(label);
-      });
+    function resizePOVs() {
+      const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
+      const grid = document.querySelector('.pov-grid');
+      grid.style.gridTemplateColumns = `repeat(${Math.min(visiblePOVs.length, 3)}, 1fr)`;
     }
 
-    function renderGrid() {
-      grid.innerHTML = "";
-      players.filter(p => activePlayers.has(p.name)).forEach(p => {
-        const pov = document.createElement("div");
-        pov.className = "pov";
-        pov.innerHTML = `
-          <div id="twitch-${p.twitch}"></div>
-          <div class="pov-info">
-            <img src="${p.country}.png" alt="">
-            <span>${p.name}</span>
-          </div>
-          <button class="focus-btn" onclick="focusPOV('${p.twitch}')">Focus</button>
-        `;
-        grid.appendChild(pov);
-
-        new Twitch.Embed(`twitch-${p.twitch}`, {
-          width: "100%",
-          height: "100%",
-          channel: p.twitch,
-          layout: "video",
-          autoplay: false,
-          muted: true
-        });
-      });
-    }
-
-    function focusPOV(twitch) {
-      if (focusedPlayer) return;
-      const playerData = players.find(p => p.twitch === twitch);
-      focusedPlayer = playerData;
-      const focusDiv = document.createElement("div");
-      focusDiv.className = "focus";
-      focusDiv.innerHTML = `
-        <div id="focus-twitch"></div>
-        <div class="pov-info" style="bottom:20px;left:20px;font-size:20px;">
-          <img src="${playerData.country}.png" alt="">
-          <span>${playerData.name}</span>
-        </div>
-      `;
-      document.body.appendChild(focusDiv);
-      new Twitch.Embed("focus-twitch", {
-        width: "100%",
-        height: "100%",
-        channel: twitch,
-        layout: "video",
-        autoplay: true,
-        muted: false
-      });
-    }
-
-    function exitFocus() {
-      const focusDiv = document.querySelector(".focus");
-      if (focusDiv) focusDiv.remove();
-      focusedPlayer = null;
-    }
-
-    document.addEventListener("keydown", e => {
-      const visiblePlayers = players.filter(p => activePlayers.has(p.name));
-      if (focusedPlayer) {
-        let index = visiblePlayers.findIndex(p => p.name === focusedPlayer.name);
-        if (e.key === "ArrowRight") {
-          exitFocus();
-          const next = visiblePlayers[(index + 1) % visiblePlayers.length];
-          focusPOV(next.twitch);
-        } else if (e.key === "ArrowLeft") {
-          exitFocus();
-          const prev = visiblePlayers[(index - 1 + visiblePlayers.length) % visiblePlayers.length];
-          focusPOV(prev.twitch);
-        } else if (e.key === "Escape") {
-          exitFocus();
+    focusButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-focus');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        if (pov.classList.contains('focused')) {
+          pov.classList.remove('focused');
+          focusedIndex = -1;
+          muteAll(true);
+        } else {
+          povs.forEach(p => p.classList.remove('focused'));
+          pov.classList.add('focused');
+          focusedIndex = povArray.indexOf(pov);
+          muteAll(true);
+          mutePOV(pov, false);
         }
+      });
+    });
+
+    hideButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-hide');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.add('hidden');
+        document.querySelector(`.player-selection input[data-player="${player}"]`).checked = false;
+        resizePOVs();
+      });
+    });
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const player = cb.getAttribute('data-player');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.toggle('hidden', !cb.checked);
+        resizePOVs();
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (focusedIndex === -1) return;
+      if (e.key === 'Escape') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = -1;
+        muteAll(true);
       }
     });
 
-    renderSelection();
-    renderGrid();
+    function mutePOV(pov, mute) {
+      const iframe = pov.querySelector('iframe');
+      iframe.contentWindow.postMessage({ event: "command", func: "setMuted", args: [mute] }, "*");
+    }
+
+    function muteAll(mute = true) {
+      povArray.forEach(p => mutePOV(p, mute));
+    }
+
+    resizePOVs();
   </script>
 </body>
 </html>
