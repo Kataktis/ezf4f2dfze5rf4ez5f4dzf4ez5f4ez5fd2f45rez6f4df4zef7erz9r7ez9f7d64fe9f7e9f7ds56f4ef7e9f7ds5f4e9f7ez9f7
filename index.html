@@ -82,10 +82,10 @@
 
     .pov-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 15px;
       padding: 160px 20px 40px;
-      transition: all 0.3s ease;
+      transition: grid-template-columns 0.3s;
     }
 
     .pov {
@@ -170,12 +170,6 @@
       background-color: #111;
       border-top: 2px solid #e50914;
     }
-
-    @media (max-width: 768px) {
-      .pov-grid { grid-template-columns: 1fr; padding-top: 180px; }
-      .info-bar { font-size: 13px; }
-      .focus-btn, .hide-btn { font-size: 11px; padding: 2px 5px; }
-    }
   </style>
 </head>
 <body>
@@ -246,24 +240,16 @@
     const checkboxes = document.querySelectorAll('.player-selection input');
     const focusButtons = document.querySelectorAll('[data-focus]');
     const hideButtons = document.querySelectorAll('[data-hide]');
+    let focusedIndex = -1;
     const povArray = Array.from(povs);
 
     function resizePOVs() {
-      const focused = document.querySelector('.pov.focused');
+      const visiblePOVs = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
-      if (focused) grid.style.gridTemplateColumns = '1fr';
-      else grid.style.gridTemplateColumns = '';
-    }
-
-    function setPOVMute(pov, mute = true) {
-      const iframe = pov.querySelector('iframe');
-      const src = iframe.src.split('?')[0];
-      const parent = new URL(iframe.src).searchParams.get('parent');
-      iframe.src = `${src}?parent=${parent}&muted=${mute}`;
-    }
-
-    function muteAllPOVs(mute = true) {
-      povArray.forEach(p => setPOVMute(p, mute));
+      if (visiblePOVs.length === 1) grid.style.gridTemplateColumns = '1fr';
+      else if (visiblePOVs.length === 2) grid.style.gridTemplateColumns = '1fr 1fr';
+      else if (visiblePOVs.length <= 4) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      else grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(400px, 1fr))';
     }
 
     focusButtons.forEach(btn => {
@@ -272,14 +258,15 @@
         const pov = document.querySelector(`.pov[data-player="${player}"]`);
         if (pov.classList.contains('focused')) {
           pov.classList.remove('focused');
+          focusedIndex = -1;
           muteAllPOVs(true);
         } else {
           povs.forEach(p => p.classList.remove('focused'));
           pov.classList.add('focused');
+          focusedIndex = povArray.indexOf(pov);
           muteAllPOVs(true);
-          setPOVMute(pov, false);
+          unmutePOV(pov);
         }
-        resizePOVs();
       });
     });
 
@@ -302,9 +289,24 @@
       });
     });
 
+    function muteAllPOVs(mute = true) {
+      povArray.forEach(pov => {
+        const iframe = pov.querySelector('iframe');
+        const src = new URL(iframe.src);
+        src.searchParams.set('muted', mute ? 'true' : 'false');
+        iframe.src = src.toString();
+      });
+    }
+
+    function unmutePOV(pov) {
+      const iframe = pov.querySelector('iframe');
+      const src = new URL(iframe.src);
+      src.searchParams.set('muted', 'false');
+      iframe.src = src.toString();
+    }
+
     window.addEventListener('resize', resizePOVs);
     resizePOVs();
-    muteAllPOVs(true);
   </script>
 </body>
 </html>
