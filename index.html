@@ -78,80 +78,75 @@
       box-shadow: 0 0 4px rgba(255, 0, 0, 0.6);
     }
 
-    /* === GRILLE DES POV === */
-    .pov-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 15px;
-      padding: 20px;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
+.pov-grid {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  height: calc(100vh - 120px);
+  box-sizing: border-box;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-auto-rows: 1fr;
+  transition: all 0.3s ease;
+}
 
-    /* === CARD POV === */
-    .pov {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #111;
-      border: 2px solid #b10000;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .pov:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
-    }
+.pov {
+  position: relative;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+}
 
-    /* === BARRE INFO SUR CHAQUE POV === */
-    .info-bar {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(10, 10, 10, 0.75);
-      backdrop-filter: blur(6px);
-      padding: 6px 10px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      z-index: 10;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-    .info-bar:hover {
-      background: rgba(25, 0, 0, 0.9);
-      transform: scale(1.05);
-    }
-    .info-bar img {
-      height: 18px;
-      border-radius: 3px;
-    }
-    .info-bar span {
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
-    }
+.pov.focused {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  z-index: 10;
+  aspect-ratio: auto;
+  height: calc(100vh - 140px);
+}
 
-    /* === BOUTONS === */
-    .focus-btn, .hide-btn {
-      border: none;
-      color: white;
-      font-size: 13px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-weight: bold;
-    }
-    .focus-btn {
-      background: linear-gradient(90deg, #b10000, #ff0000);
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-    }
-    .focus-btn:hover {
-      background: linear-gradient(90deg, #ff0000, #b10000);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+.pov iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.info-bar {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.info-bar img {
+  height: 16px;
+  border-radius: 2px;
+}
+
+.focus-btn, .hide-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.focus-btn:hover, .hide-btn:hover {
+  background: rgba(255, 0, 0, 0.7);
+
     }
     .hide-btn {
       background: rgba(80, 80, 80, 0.7);
@@ -305,3 +300,4 @@
   </script>
 </body>
 </html>
+
