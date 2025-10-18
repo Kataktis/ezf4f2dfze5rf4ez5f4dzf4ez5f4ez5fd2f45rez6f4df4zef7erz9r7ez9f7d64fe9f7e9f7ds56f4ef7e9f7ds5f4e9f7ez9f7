@@ -1,138 +1,307 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kataktis POV Manager</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin:0; padding:0; font-family:'Rajdhani', sans-serif;}
-html, body {height:100%; width:100%; background:#0a0a0a; color:white; display:flex; flex-direction:column; overflow:hidden;}
-header {flex-shrink:0; display:flex; align-items:center; justify-content:space-between; background:#1a1a1a; padding:10px 20px; border-bottom:3px solid #b10000;}
-header img{height:45px;}
-h1 {flex:1; text-align:center; color:#b10000; font-size:1.6em; text-transform:uppercase; letter-spacing:2px;}
-.player-selection {flex-shrink:0; display:flex; flex-wrap:wrap; justify-content:center; background:#141414; padding:10px; border-bottom:2px solid #b10000; gap:8px;}
-.player-selection label {display:flex; align-items:center; gap:6px; background:#1f1f1f; border-radius:8px; padding:6px 10px; cursor:pointer; transition:0.2s;}
-.player-selection label:hover {background:#b10000;}
-.player-selection img{width:18px; height:12px; border-radius:2px;}
-main{flex:1; display:flex; justify-content:center; align-items:stretch; overflow:hidden;}
-.pov-grid{display:grid; width:100%; height:100%; gap:10px; padding:10px; transition:all 0.3s ease;}
-.pov{position:relative; border:2px solid #b10000; border-radius:10px; overflow:hidden; background:black;}
-.info-bar{position:absolute; bottom:8px; left:8px; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:6px; display:flex; align-items:center; gap:6px; font-size:14px;}
-.info-bar img{width:20px; height:14px; border-radius:2px;}
-.focus-btn{position:absolute; top:8px; right:8px; background:#b10000; border:none; color:white; border-radius:5px; padding:4px 8px; cursor:pointer; transition:0.2s;}
-.focus-btn:hover{background:#ff0000;}
-.focused{position:fixed !important; top:0; left:0; width:100vw !important; height:100vh !important; z-index:100; background:black; border:3px solid #ff0000; box-shadow:0 0 25px #ff0000;}
-footer{flex-shrink:0; background:#1a1a1a; border-top:2px solid #b10000; text-align:center; padding:8px; font-size:0.9em; color:#bbb;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kataktis POV Manager</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: #0a0a0a;
+      color: white;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 30px;
+      background-color: #b10000;
+      box-shadow: 0 0 10px #b10000;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+    }
+
+    header img { height: 50px; }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .player-selection {
+      margin-top: 80px;
+      background-color: #1a1a1a;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-bottom: 2px solid #b10000;
+      padding: 8px;
+    }
+
+    .player-selection label {
+      margin: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .player-selection img {
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+    }
+
+    input[type="checkbox"] { margin-right: 4px; }
+
+    .pov-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px;
+      margin-top: 5px;
+      height: 100%;
+    }
+
+    .pov {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid #b10000;
+      transition: all 0.2s ease;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .info-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 4px 8px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .info-bar img {
+      height: 16px;
+      width: auto;
+      border-radius: 2px;
+    }
+
+    .focus-btn, .hide-btn {
+      background-color: #b10000;
+      border: none;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .focus-btn:hover, .hide-btn:hover {
+      background-color: #ff0000;
+    }
+
+    .hide-btn {
+      background-color: #333;
+      margin-left: 5px;
+    }
+
+    .focused {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 200;
+      border: 3px solid #ff0000;
+      box-shadow: 0 0 30px #ff0000;
+      background-color: black;
+    }
+
+    .hidden { display: none !important; }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      background-color: #1a1a1a;
+      border-top: 2px solid #b10000;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <img src="logo.png" alt="Logo Team">
+    <h1>Kataktis POV Manager</h1>
+  </header>
 
-<header>
-  <img src="logo.png" alt="Logo Kataktis">
-  <h1>Kataktis POV Manager</h1>
-</header>
+  <div class="player-selection">
+    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png">Erxk</label>
+    <label><input type="checkbox" data-player="haxo" checked><img src="it.png">Haxo</label>
+    <label><input type="checkbox" data-player="shin" checked><img src="fr.png">Shin</label>
+    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png">Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png">Nerzox</label>
+  </div>
 
-<div class="player-selection">
-  <label><img src="hu.png"><input type="checkbox" data-player="erxk" checked> Erxk</label>
-  <label><img src="it.png"><input type="checkbox" data-player="haxo" checked> Haxo</label>
-  <label><img src="fr.png"><input type="checkbox" data-player="shin" checked> Shin</label>
-  <label><img src="fr.png"><input type="checkbox" data-player="yayaz" checked> Yayaz</label>
-  <label><img src="fr.png"><input type="checkbox" data-player="nerzox" checked> Nerzox</label>
-</div>
+  <div class="pov-grid">
+    <div class="pov" data-player="erxk">
+      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true"></iframe>
+      <div class="info-bar">
+        <img src="hu.png"><span>Erxk</span>
+        <button class="focus-btn" data-focus="erxk">🎯</button>
+        <button class="hide-btn" data-hide="erxk">❌</button>
+      </div>
+    </div>
 
-<main>
-  <div class="pov-grid" id="povGrid"></div>
-</main>
+    <div class="pov" data-player="haxo">
+      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true"></iframe>
+      <div class="info-bar">
+        <img src="it.png"><span>Haxo</span>
+        <button class="focus-btn" data-focus="haxo">🎯</button>
+        <button class="hide-btn" data-hide="haxo">❌</button>
+      </div>
+    </div>
 
-<footer>© 2025 Kataktis eSport — Interface Staff POV</footer>
+    <div class="pov" data-player="shin">
+      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true"></iframe>
+      <div class="info-bar">
+        <img src="fr.png"><span>Shin</span>
+        <button class="focus-btn" data-focus="shin">🎯</button>
+        <button class="hide-btn" data-hide="shin">❌</button>
+      </div>
+    </div>
 
-<script src="https://player.twitch.tv/js/embed/v1.js"></script>
-<script>
-const players = [
-  {id:"erxk", name:"Erxk", flag:"hu.png", twitch:"erxk0"},
-  {id:"haxo", name:"Haxo", flag:"it.png", twitch:"haxofnbr"},
-  {id:"shin", name:"Shin", flag:"fr.png", twitch:"12shinn"},
-  {id:"yayaz", name:"Yayaz", flag:"fr.png", twitch:"yayaz_fn"},
-  {id:"nerzox", name:"Nerzox", flag:"fr.png", twitch:"nerzox35"}
-];
+    <div class="pov" data-player="yayaz">
+      <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true"></iframe>
+      <div class="info-bar">
+        <img src="fr.png"><span>Yayaz</span>
+        <button class="focus-btn" data-focus="yayaz">🎯</button>
+        <button class="hide-btn" data-hide="yayaz">❌</button>
+      </div>
+    </div>
 
-const povGrid = document.getElementById("povGrid");
-const checkboxes = document.querySelectorAll(".player-selection input");
-let focusedId = null;
-const embeds = {};
+    <div class="pov" data-player="nerzox">
+      <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true"></iframe>
+      <div class="info-bar">
+        <img src="fr.png"><span>Nerzox</span>
+        <button class="focus-btn" data-focus="nerzox">🎯</button>
+        <button class="hide-btn" data-hide="nerzox">❌</button>
+      </div>
+    </div>
+  </div>
 
-function renderPOVs(){
-  povGrid.innerHTML="";
-  const activePlayers = players.filter(p=>document.querySelector(`input[data-player="${p.id}"]`).checked);
-  activePlayers.forEach(p=>{
-    const div=document.createElement("div");
-    div.classList.add("pov");
-    div.dataset.player=p.id;
-    div.innerHTML=`
-      <div class="embed-container" id="embed-${p.id}"></div>
-      <div class="info-bar"><img src="${p.flag}" alt=""><span>${p.name}</span></div>
-      <button class="focus-btn" onclick="focusPOV('${p.id}')">🎯 Focus</button>
-    `;
-    povGrid.appendChild(div);
+  <footer>Kataktis eSport - Interface Staff POV</footer>
 
-    if(!embeds[p.id]){
-      embeds[p.id]=new Twitch.Embed(`embed-${p.id}`, {
-        width: "100%",
-        height: "100%",
-        channel: p.twitch,
-        parent: ["kataktis.github.io"], // <- ton domaine GitHub Pages
-        muted: true
+  <script>
+    const povs = document.querySelectorAll('.pov');
+    const checkboxes = document.querySelectorAll('.player-selection input');
+    const focusButtons = document.querySelectorAll('[data-focus]');
+    const hideButtons = document.querySelectorAll('[data-hide]');
+    const povArray = Array.from(povs);
+    let focusedIndex = -1;
+
+    function resizePOVs() {
+      const visible = document.querySelectorAll('.pov:not(.hidden)');
+      const grid = document.querySelector('.pov-grid');
+      if (visible.length === 1) grid.style.gridTemplateColumns = '1fr';
+      else if (visible.length === 2) grid.style.gridTemplateColumns = '1fr 1fr';
+      else if (visible.length <= 4) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+      else grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(0, 1fr))';
+    }
+
+    focusButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-focus');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        if (pov.classList.contains('focused')) {
+          pov.classList.remove('focused');
+          focusedIndex = -1;
+          reloadAllMuted(true);
+        } else {
+          povs.forEach(p => p.classList.remove('focused'));
+          pov.classList.add('focused');
+          focusedIndex = povArray.indexOf(pov);
+          reloadAllMuted(true);
+          reloadPOV(pov, false);
+        }
       });
+    });
+
+    hideButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const player = btn.getAttribute('data-hide');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.add('hidden');
+        document.querySelector(`.player-selection input[data-player="${player}"]`).checked = false;
+        resizePOVs();
+      });
+    });
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const player = cb.getAttribute('data-player');
+        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+        pov.classList.toggle('hidden', !cb.checked);
+        resizePOVs();
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (focusedIndex === -1) return;
+      if (e.key === 'ArrowRight') changeFocus(1);
+      else if (e.key === 'ArrowLeft') changeFocus(-1);
+      else if (e.key === 'Escape') {
+        povArray[focusedIndex].classList.remove('focused');
+        focusedIndex = -1;
+        reloadAllMuted(true);
+      }
+    });
+
+    function changeFocus(direction) {
+      povArray[focusedIndex].classList.remove('focused');
+      focusedIndex = (focusedIndex + direction + povArray.length) % povArray.length;
+      povArray[focusedIndex].classList.add('focused');
+      reloadAllMuted(true);
+      reloadPOV(povArray[focusedIndex], false);
     }
-  });
-  adjustGrid(activePlayers.length);
-}
 
-function adjustGrid(count){
-  if(count<=1)povGrid.style.gridTemplateColumns="1fr";
-  else if(count===2)povGrid.style.gridTemplateColumns="1fr 1fr";
-  else if(count<=4)povGrid.style.gridTemplateColumns="repeat(2,1fr)";
-  else povGrid.style.gridTemplateColumns="repeat(auto-fit,minmax(400px,1fr))";
-}
-
-function focusPOV(id){
-  document.querySelectorAll(".pov").forEach(p=>p.classList.remove("focused"));
-  const pov=document.querySelector(`.pov[data-player="${id}"]`);
-  if(!pov)return;
-  pov.classList.add("focused");
-  focusedId=id;
-
-  players.forEach(p=>{
-    const playerEmbed=embeds[p.id];
-    if(playerEmbed && playerEmbed.getPlayer){
-      if(p.id===id) playerEmbed.getPlayer().setMuted(false);
-      else playerEmbed.getPlayer().setMuted(true);
+    function reloadAllMuted(mute) {
+      povArray.forEach(pov => reloadPOV(pov, mute));
     }
-  });
-}
 
-function exitFocus(){
-  document.querySelectorAll(".pov").forEach(p=>p.classList.remove("focused"));
-  focusedId=null;
-  players.forEach(p=>{
-    const playerEmbed=embeds[p.id];
-    if(playerEmbed && playerEmbed.getPlayer) playerEmbed.getPlayer().setMuted(true);
-  });
-}
+    function reloadPOV(pov, mute) {
+      const iframe = pov.querySelector('iframe');
+      const src = new URL(iframe.src);
+      src.searchParams.set('muted', mute ? 'true' : 'false');
+      iframe.src = src.toString();
+    }
 
-document.addEventListener("keydown", e=>{
-  const activePovs=Array.from(document.querySelectorAll(".pov"));
-  if(focusedId===null) return;
-  let idx=activePovs.findIndex(p=>p.dataset.player===focusedId);
-  if(e.key==="ArrowRight"){ idx=(idx+1)%activePovs.length; focusPOV(activePovs[idx].dataset.player);}
-  else if(e.key==="ArrowLeft"){ idx=(idx-1+activePovs.length)%activePovs.length; focusPOV(activePovs[idx].dataset.player);}
-  else if(e.key==="Escape") exitFocus();
-});
-
-checkboxes.forEach(cb=>cb.addEventListener("change", renderPOVs));
-renderPOVs();
-</script>
-
+    window.addEventListener('resize', resizePOVs);
+    resizePOVs();
+  </script>
 </body>
 </html>
