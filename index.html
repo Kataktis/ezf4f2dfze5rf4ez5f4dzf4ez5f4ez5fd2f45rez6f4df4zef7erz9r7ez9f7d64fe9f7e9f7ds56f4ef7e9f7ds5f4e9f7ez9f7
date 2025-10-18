@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       display: flex;
       align-items: center;
@@ -20,6 +21,7 @@
       background-color: #b10000;
       box-shadow: 0 0 10px #b10000;
     }
+
     header img { height: 50px; }
     header h1 {
       margin: 0;
@@ -27,6 +29,7 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
+
     .player-selection {
       background-color: #1a1a1a;
       display: flex;
@@ -35,6 +38,7 @@
       border-bottom: 2px solid #b10000;
       padding: 8px;
     }
+
     .player-selection label {
       margin: 5px 10px;
       cursor: pointer;
@@ -43,6 +47,7 @@
       display: flex;
       align-items: center;
     }
+
     .player-selection label img {
       height: 16px;
       width: auto;
@@ -50,7 +55,9 @@
       vertical-align: middle;
       border-radius: 2px;
     }
+
     input[type="checkbox"] { margin-right: 5px; }
+
     .pov-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -59,12 +66,14 @@
       height: calc(100vh - 160px);
       box-sizing: border-box;
     }
+
     .pov {
       position: relative;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #b10000;
     }
+
     .info-bar {
       position: absolute;
       bottom: 8px;
@@ -79,19 +88,22 @@
       user-select: none;
       z-index: 10;
     }
+
     .info-bar img { height: 16px; border-radius: 2px; }
-    .focus-btn, .hide-btn {
+
+    .focus-btn {
       background-color: #b10000;
       border: none;
       color: white;
-      font-size: 12px;
-      padding: 2px 6px;
+      font-size: 18px; /* bouton plus grand */
+      padding: 6px 10px;
       border-radius: 5px;
       cursor: pointer;
       transition: 0.2s;
     }
-    .focus-btn:hover, .hide-btn:hover { background-color: #ff0000; }
-    .hide-btn { background-color: #333; margin-left: 5px; }
+
+    .focus-btn:hover { background-color: #ff0000; }
+
     .focused {
       position: fixed !important;
       top: 0;
@@ -103,7 +115,9 @@
       box-shadow: 0 0 30px #ff0000;
       background-color: black;
     }
+
     .hidden { display: none !important; }
+
     footer {
       text-align: center;
       padding: 10px;
@@ -133,7 +147,6 @@
       <div class="info-bar">
         <img src="hu.png" alt="🇭🇺"><span>Erxk</span>
         <button class="focus-btn" data-focus="erxk">🎯</button>
-        <button class="hide-btn" data-hide="erxk">❌</button>
       </div>
     </div>
 
@@ -142,7 +155,6 @@
       <div class="info-bar">
         <img src="it.png" alt="🇮🇹"><span>Haxo</span>
         <button class="focus-btn" data-focus="haxo">🎯</button>
-        <button class="hide-btn" data-hide="haxo">❌</button>
       </div>
     </div>
 
@@ -151,7 +163,6 @@
       <div class="info-bar">
         <img src="fr.png" alt="🇫🇷"><span>Shin</span>
         <button class="focus-btn" data-focus="shin">🎯</button>
-        <button class="hide-btn" data-hide="shin">❌</button>
       </div>
     </div>
 
@@ -160,7 +171,6 @@
       <div class="info-bar">
         <img src="fr.png" alt="🇫🇷"><span>Yayaz</span>
         <button class="focus-btn" data-focus="yayaz">🎯</button>
-        <button class="hide-btn" data-hide="yayaz">❌</button>
       </div>
     </div>
 
@@ -169,7 +179,6 @@
       <div class="info-bar">
         <img src="fr.png" alt="🇫🇷"><span>Nerzox</span>
         <button class="focus-btn" data-focus="nerzox">🎯</button>
-        <button class="hide-btn" data-hide="nerzox">❌</button>
       </div>
     </div>
   </div>
@@ -220,15 +229,6 @@
       });
     });
 
-    // Boutons hide
-    document.querySelectorAll('.hide-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-hide');
-        document.querySelector(`.pov[data-player="${id}"]`).classList.add('hidden');
-        document.querySelector(`.player-selection input[data-player="${id}"]`).checked = false;
-      });
-    });
-
     // Sélection du haut
     document.querySelectorAll('.player-selection input').forEach(cb => {
       cb.addEventListener('change', () => {
@@ -268,4 +268,3 @@
   </script>
 </body>
 </html>
-
