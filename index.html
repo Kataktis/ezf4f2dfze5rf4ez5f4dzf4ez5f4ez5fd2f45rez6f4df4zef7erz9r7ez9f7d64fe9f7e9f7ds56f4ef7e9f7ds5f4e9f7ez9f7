@@ -1,336 +1,258 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kataktis POV Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KATAKTIS POV Manager</title>
+  <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <style>
-    /* === THEME GLOBAL === */
-    body {
-      background-color: #0a0a0a;
-      color: #fff;
-      font-family: 'Rajdhani', 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
+    :root {
+      --team-red: #c80000;
+      --dark-bg: #0e0e0e;
+      --text-light: #f5f5f5;
+      --accent: #ff3c3c;
     }
 
-    /* === HEADER === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Rajdhani", sans-serif;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
     header {
+      background: var(--team-red);
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 40px;
-      background: linear-gradient(90deg, #8a0000, #b10000, #ff0000);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-    }
-    header img {
-      height: 55px;
-      filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.8));
-    }
-    header h1 {
-      margin: 0;
-      font-size: 26px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #fff;
-      text-shadow: 0 0 15px #ff0000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
-    /* === BARRE DE SELECTION === */
-    .player-selection {
-      background: #141414;
-      border-bottom: 2px solid #b10000;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 10px 20px;
-      gap: 10px;
+    header img {
+      height: 40px;
+      width: auto;
     }
+
+    .player-selection {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
     .player-selection label {
-      background: rgba(255, 0, 0, 0.1);
-      border: 1px solid #b10000;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 5px 10px;
       cursor: pointer;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      transition: background 0.2s ease;
+    }
+
+    .player-selection label:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .player-selection input {
+      margin-right: 6px;
+      accent-color: var(--accent);
+    }
+
+    .player-selection img {
+      height: 16px;
+      width: auto;
+      margin-right: 5px;
+      border-radius: 2px;
+    }
+
+    .pov-container {
+      flex: 1;
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-auto-rows: 1fr;
+      transition: all 0.3s ease;
+    }
+
+    .pov {
+      position: relative;
+      background: #111;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .pov.focused {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      z-index: 10;
+      border: 2px solid var(--accent);
+    }
+
+    .info-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .info-bar-left {
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: 0.25s ease;
-      box-shadow: 0 0 5px rgba(255, 0, 0, 0.25);
-    }
-    .player-selection label:hover {
-      background: rgba(255, 0, 0, 0.25);
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-    }
-    .player-selection input[type="checkbox"] {
-      accent-color: #ff0000;
-      margin-right: 4px;
-    }
-    .player-selection label img {
-      height: 18px;
-      width: auto;
-      border-radius: 3px;
-      box-shadow: 0 0 4px rgba(255, 0, 0, 0.6);
     }
 
-    /* === GRILLE DES POV === */
-    .pov-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 15px;
-      padding: 20px;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-    }
-
-    /* === CARD POV === */
-    .pov {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #111;
-      border: 2px solid #b10000;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .pov:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
-    }
-
-    /* === BARRE INFO SUR CHAQUE POV === */
-    .info-bar {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(10, 10, 10, 0.75);
-      backdrop-filter: blur(6px);
-      padding: 6px 10px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 15px;
-      z-index: 10;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-    .info-bar:hover {
-      background: rgba(25, 0, 0, 0.9);
-      transform: scale(1.05);
-    }
     .info-bar img {
       height: 18px;
-      border-radius: 3px;
+      border-radius: 2px;
     }
+
     .info-bar span {
       font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+      font-size: 1rem;
     }
 
-    /* === BOUTONS === */
-    .focus-btn, .hide-btn {
+    .info-bar button {
+      background: transparent;
       border: none;
-      color: white;
-      font-size: 13px;
-      padding: 4px 8px;
-      border-radius: 6px;
+      color: var(--text-light);
       cursor: pointer;
-      transition: 0.2s;
-      font-weight: bold;
-    }
-    .focus-btn {
-      background: linear-gradient(90deg, #b10000, #ff0000);
-      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-    }
-    .focus-btn:hover {
-      background: linear-gradient(90deg, #ff0000, #b10000);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-    }
-    .hide-btn {
-      background: rgba(80, 80, 80, 0.7);
-    }
-    .hide-btn:hover {
-      background: rgba(255, 0, 0, 0.3);
+      font-size: 1.1rem;
+      transition: transform 0.2s ease, color 0.2s ease;
     }
 
-    /* === FOCUS MODE === */
-    .focused {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      z-index: 100;
-      border: 3px solid #ff0000;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
-      animation: zoomIn 0.3s ease forwards;
-    }
-    @keyframes zoomIn {
-      from { transform: scale(0.95); opacity: 0.8; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* === ÉTAT CACHÉ === */
-    .hidden {
-      display: none !important;
-    }
-
-    /* === FOOTER === */
-    footer {
-      text-align: center;
-      padding: 14px;
-      font-size: 14px;
-      background-color: #141414;
-      border-top: 2px solid #b10000;
-      letter-spacing: 1px;
-      box-shadow: 0 -2px 10px rgba(255, 0, 0, 0.3);
+    .info-bar button:hover {
+      color: var(--accent);
+      transform: scale(1.2);
     }
   </style>
 </head>
 
 <body>
   <header>
-    <img src="logo.png" alt="Logo Team" />
-    <h1>Kataktis POV Manager</h1>
+    <img src="logo.png" alt="Logo Team Kataktis">
+    <div class="player-selection">
+      <label><input type="checkbox" data-player="erxk" checked><img src="hu.png">Erxk</label>
+      <label><input type="checkbox" data-player="haxo" checked><img src="it.png">Haxo</label>
+      <label><input type="checkbox" data-player="shin" checked><img src="fr.png">Shin</label>
+      <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png">Yayaz</label>
+      <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png">Nerzox</label>
+    </div>
   </header>
 
-  <div class="player-selection">
-    <label><input type="checkbox" data-player="erxk" checked /><img src="hu.png" />Erxk</label>
-    <label><input type="checkbox" data-player="haxo" checked /><img src="it.png" />Haxo</label>
-    <label><input type="checkbox" data-player="shin" checked /><img src="fr.png" />Shin</label>
-    <label><input type="checkbox" data-player="yayaz" checked /><img src="fr.png" />Yayaz</label>
-    <label><input type="checkbox" data-player="nerzox" checked /><img src="fr.png" />Nerzox</label>
-  </div>
-
-  <div class="pov-grid">
-    <div class="pov" data-player="erxk">
-      <div id="player-erxk" style="width:100%;height:100%;"></div>
+  <main class="pov-container">
+    <div class="pov" id="erxk">
       <div class="info-bar">
-        <img src="hu.png" /><span>Erxk</span>
-        <button class="focus-btn" data-focus="erxk">🎯</button>
-        <button class="hide-btn" data-hide="erxk">❌</button>
+        <div class="info-bar-left">
+          <img src="hu.png"><span>Erxk</span>
+        </div>
+        <button class="focus-btn" data-player="erxk">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="haxo">
-      <div id="player-haxo" style="width:100%;height:100%;"></div>
+    <div class="pov" id="haxo">
       <div class="info-bar">
-        <img src="it.png" /><span>Haxo</span>
-        <button class="focus-btn" data-focus="haxo">🎯</button>
-        <button class="hide-btn" data-hide="haxo">❌</button>
+        <div class="info-bar-left">
+          <img src="it.png"><span>Haxo</span>
+        </div>
+        <button class="focus-btn" data-player="haxo">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="shin">
-      <div id="player-shin" style="width:100%;height:100%;"></div>
+    <div class="pov" id="shin">
       <div class="info-bar">
-        <img src="fr.png" /><span>Shin</span>
-        <button class="focus-btn" data-focus="shin">🎯</button>
-        <button class="hide-btn" data-hide="shin">❌</button>
+        <div class="info-bar-left">
+          <img src="fr.png"><span>Shin</span>
+        </div>
+        <button class="focus-btn" data-player="shin">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="yayaz">
-      <div id="player-yayaz" style="width:100%;height:100%;"></div>
+    <div class="pov" id="yayaz">
       <div class="info-bar">
-        <img src="fr.png" /><span>Yayaz</span>
-        <button class="focus-btn" data-focus="yayaz">🎯</button>
-        <button class="hide-btn" data-hide="yayaz">❌</button>
+        <div class="info-bar-left">
+          <img src="fr.png"><span>Yayaz</span>
+        </div>
+        <button class="focus-btn" data-player="yayaz">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="nerzox">
-      <div id="player-nerzox" style="width:100%;height:100%;"></div>
+    <div class="pov" id="nerzox">
       <div class="info-bar">
-        <img src="fr.png" /><span>Nerzox</span>
-        <button class="focus-btn" data-focus="nerzox">🎯</button>
-        <button class="hide-btn" data-hide="nerzox">❌</button>
+        <div class="info-bar-left">
+          <img src="fr.png"><span>Nerzox</span>
+        </div>
+        <button class="focus-btn" data-player="nerzox">🎯</button>
       </div>
     </div>
-  </div>
+  </main>
 
-
-
-  <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
-    const players = {};
-    const playerIds = ['erxk', 'haxo', 'shin', 'yayaz', 'nerzox'];
-    const channels = {
-      erxk: 'inoxtag',
-      haxo: 'inoxtag',
-      shin: 'inoxtag',
-      yayaz: 'yayaz_fn',
-      nerzox: 'nerzox35'
+    const players = {
+      erxk: new Twitch.Player("erxk", { channel: "erxk0", width: "100%", height: "100%", muted: true }),
+      haxo: new Twitch.Player("haxo", { channel: "haxofnbr", width: "100%", height: "100%", muted: true }),
+      shin: new Twitch.Player("shin", { channel: "12shinn", width: "100%", height: "100%", muted: true }),
+      yayaz: new Twitch.Player("yayaz", { channel: "yayaz_fn", width: "100%", height: "100%", muted: true }),
+      nerzox: new Twitch.Player("nerzox", { channel: "nerzox35", width: "100%", height: "100%", muted: true })
     };
-    let focusedPlayer = null;
 
-    playerIds.forEach(id => {
-      players[id] = new Twitch.Player('player-' + id, {
-        channel: channels[id],
-        width: '100%',
-        height: '100%',
-        muted: true
-      });
-    });
+    const povContainer = document.querySelector(".pov-container");
+    const focusButtons = document.querySelectorAll(".focus-btn");
+    const checkboxes = document.querySelectorAll(".player-selection input");
 
-    function focusPlayer(id) {
-      playerIds.forEach(pid => players[pid].setMuted(true));
-      players[id].setMuted(false);
-      document.querySelectorAll('.pov').forEach(p => p.classList.remove('focused'));
-      document.querySelector(`.pov[data-player="${id}"]`).classList.add('focused');
-      focusedPlayer = id;
-    }
+    let currentFocus = null;
 
-    document.querySelectorAll('.focus-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.focus;
-        if (focusedPlayer === id) {
-          players[id].setMuted(true);
-          document.querySelector(`.pov[data-player="${id}"]`).classList.remove('focused');
-          focusedPlayer = null;
+    focusButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const playerId = btn.dataset.player;
+        const pov = document.getElementById(playerId);
+
+        if (currentFocus === pov) {
+          pov.classList.remove("focused");
+          currentFocus = null;
         } else {
-          focusPlayer(id);
+          document.querySelectorAll(".pov").forEach(p => p.classList.remove("focused"));
+          pov.classList.add("focused");
+          currentFocus = pov;
+        }
+
+        // gestion du son
+        for (const id in players) {
+          players[id].setMuted(true);
+        }
+        if (currentFocus) {
+          players[playerId].setMuted(false);
         }
       });
     });
 
-    document.querySelectorAll('.hide-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.hide;
-        document.querySelector(`.pov[data-player="${id}"]`).classList.add('hidden');
-        document.querySelector(`.player-selection input[data-player="${id}"]`).checked = false;
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        const playerId = cb.dataset.player;
+        const pov = document.getElementById(playerId);
+        pov.style.display = cb.checked ? "flex" : "none";
       });
-    });
-
-    document.querySelectorAll('.player-selection input').forEach(cb => {
-      cb.addEventListener('change', () => {
-        const id = cb.dataset.player;
-        const pov = document.querySelector(`.pov[data-player="${id}"]`);
-        pov.classList.toggle('hidden', !cb.checked);
-      });
-    });
-
-    document.addEventListener('keydown', e => {
-      if (!focusedPlayer) return;
-      let idx = playerIds.indexOf(focusedPlayer);
-      if (e.key === 'ArrowRight') idx = (idx + 1) % playerIds.length;
-      else if (e.key === 'ArrowLeft') idx = (idx - 1 + playerIds.length) % playerIds.length;
-      else if (e.key === 'Escape') {
-        players[focusedPlayer].setMuted(true);
-        document.querySelector(`.pov[data-player="${focusedPlayer}"]`).classList.remove('focused');
-        focusedPlayer = null;
-        return;
-      }
-      focusPlayer(playerIds[idx]);
     });
   </script>
 </body>
 </html>
-
