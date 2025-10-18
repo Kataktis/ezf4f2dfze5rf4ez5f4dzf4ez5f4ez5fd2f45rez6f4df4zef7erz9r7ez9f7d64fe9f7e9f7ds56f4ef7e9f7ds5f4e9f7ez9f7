@@ -23,11 +23,43 @@
     }
 
     header img { height: 50px; }
+
+    .title-live {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     header h1 {
       margin: 0;
       font-size: 22px;
       text-transform: uppercase;
       letter-spacing: 2px;
+    }
+
+    /* --- BADGE LIVE --- */
+    .live-badge {
+      display: flex;
+      align-items: center;
+      background: black;
+      border: 2px solid #ff0000;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+      gap: 5px;
+    }
+    .live-badge .dot {
+      width: 10px;
+      height: 10px;
+      background: red;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
     }
 
     .player-selection {
@@ -95,7 +127,7 @@
       background-color: #b10000;
       border: none;
       color: white;
-      font-size: 18px; /* bouton plus grand */
+      font-size: 18px;
       padding: 6px 10px;
       border-radius: 5px;
       cursor: pointer;
@@ -130,7 +162,10 @@
 <body>
   <header>
     <img src="logo.png" alt="Logo Team">
-    <h1>Kataktis POV Manager</h1>
+    <div class="title-live">
+      <h1>Kataktis POV Manager</h1>
+      <div class="live-badge"><span class="dot"></span> LIVE</div>
+    </div>
   </header>
 
   <div class="player-selection">
@@ -189,8 +224,8 @@
   <script>
     const playerIds = ['erxk','haxo','shin','yayaz','nerzox'];
     const channels = {
-      'erxk':'kaatsup',
-      'haxo':'kaatsup',
+      'erxk':'erxk0',
+      'haxo':'haxofnbr',
       'shin':'12shinn',
       'yayaz':'yayaz_fn',
       'nerzox':'nerzox35'
@@ -198,7 +233,6 @@
     const players = {};
     let focusedPlayer = null;
 
-    // Création des Twitch players
     playerIds.forEach(id => {
       players[id] = new Twitch.Player('player-' + id, {
         channel: channels[id],
@@ -208,7 +242,6 @@
       });
     });
 
-    // Focus
     function focusPlayer(id) {
       playerIds.forEach(pid => players[pid].setMuted(true));
       players[id].setMuted(false);
@@ -217,7 +250,6 @@
       focusedPlayer = id;
     }
 
-    // Boutons focus
     document.querySelectorAll('.focus-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-focus');
@@ -229,7 +261,6 @@
       });
     });
 
-    // Sélection du haut
     document.querySelectorAll('.player-selection input').forEach(cb => {
       cb.addEventListener('change', () => {
         const id = cb.getAttribute('data-player');
@@ -239,7 +270,6 @@
       });
     });
 
-    // Resize dynamique
     function resizePOVs(){
       const visible = document.querySelectorAll('.pov:not(.hidden)');
       const grid = document.querySelector('.pov-grid');
@@ -251,7 +281,6 @@
     window.addEventListener('resize', resizePOVs);
     resizePOVs();
 
-    // Navigation clavier
     document.addEventListener('keydown', e => {
       if(!focusedPlayer) return;
       let idx = playerIds.indexOf(focusedPlayer);
@@ -268,5 +297,3 @@
   </script>
 </body>
 </html>
-
-
