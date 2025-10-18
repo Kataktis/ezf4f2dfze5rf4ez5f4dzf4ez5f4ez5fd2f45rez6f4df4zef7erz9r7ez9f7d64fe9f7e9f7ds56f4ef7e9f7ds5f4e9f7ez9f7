@@ -8,12 +8,13 @@
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background-color: #0a0a0a;
+      background: linear-gradient(160deg, #000000 0%, #2a0000 40%, #b10000 100%);
       color: white;
       font-family: "Poppins", sans-serif;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      transition: background 0.5s ease;
     }
 
     header {
@@ -21,8 +22,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 30px;
-      background-color: #b10000;
-      box-shadow: 0 0 10px #b10000;
+      background-color: rgba(177, 0, 0, 0.95);
+      box-shadow: 0 0 20px #b10000;
       position: fixed;
       top: 0;
       left: 0;
@@ -40,7 +41,7 @@
 
     .player-selection {
       margin-top: 80px;
-      background-color: #1a1a1a;
+      background-color: rgba(20, 20, 20, 0.9);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -56,6 +57,12 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      transition: 0.3s;
+    }
+
+    .player-selection label:hover {
+      color: #ff4444;
+      transform: scale(1.05);
     }
 
     .player-selection img {
@@ -64,8 +71,6 @@
       border-radius: 2px;
     }
 
-    input[type="checkbox"] { margin-right: 4px; }
-
     .pov-grid {
       flex: 1;
       display: grid;
@@ -73,7 +78,6 @@
       gap: 10px;
       padding: 10px;
       margin-top: 5px;
-      height: 100%;
     }
 
     .pov {
@@ -81,7 +85,14 @@
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #b10000;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease-in-out;
+      background: black;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     iframe {
@@ -94,7 +105,7 @@
       position: absolute;
       bottom: 8px;
       left: 8px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       padding: 4px 8px;
       border-radius: 8px;
       display: flex;
@@ -140,16 +151,38 @@
       border: 3px solid #ff0000;
       box-shadow: 0 0 30px #ff0000;
       background-color: black;
+      transition: all 0.5s ease-in-out;
+      animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.97); opacity: 0.8; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .hidden { display: none !important; }
+
+    .offline-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(177, 0, 0, 0.9);
+      color: white;
+      text-align: center;
+      padding: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
 
     footer {
       text-align: center;
       padding: 10px;
       font-size: 13px;
-      background-color: #1a1a1a;
+      background-color: rgba(20, 20, 20, 0.95);
       border-top: 2px solid #b10000;
+      margin-top: auto;
     }
   </style>
 </head>
@@ -168,48 +201,44 @@
   </div>
 
   <div class="pov-grid">
-    <div class="pov" data-player="erxk">
-      <iframe src="https://player.twitch.tv/?channel=inoxtag&parent=kataktis.github.io&muted=true"></iframe>
+    <div class="pov" data-player="erxk" data-channel="erxk0">
+      <iframe src="https://player.twitch.tv/?channel=erxk0&parent=kataktis.github.io&muted=true"></iframe>
       <div class="info-bar">
         <img src="hu.png"><span>Erxk</span>
-        <button class="focus-btn" data-focus="erxk">🎯</button>
-        <button class="hide-btn" data-hide="erxk">❌</button>
+        <button class="focus-btn">🎯</button>
+        <button class="hide-btn">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="haxo">
-      <iframe src="https://player.twitch.tv/?channel=inoxtag&parent=kataktis.github.io&muted=true"></iframe>
+    <div class="pov" data-player="haxo" data-channel="haxofnbr">
+      <iframe src="https://player.twitch.tv/?channel=haxofnbr&parent=kataktis.github.io&muted=true"></iframe>
       <div class="info-bar">
         <img src="it.png"><span>Haxo</span>
-        <button class="focus-btn" data-focus="haxo">🎯</button>
-        <button class="hide-btn" data-hide="haxo">❌</button>
+        <button class="focus-btn">🎯</button>
+        <button class="hide-btn">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="shin">
-      <iframe src="https://player.twitch.tv/?channel=inoxtag&parent=kataktis.github.io&muted=true"></iframe>
+    <div class="pov" data-player="shin" data-channel="12shinn">
+      <iframe src="https://player.twitch.tv/?channel=12shinn&parent=kataktis.github.io&muted=true"></iframe>
       <div class="info-bar">
         <img src="fr.png"><span>Shin</span>
-        <button class="focus-btn" data-focus="shin">🎯</button>
-        <button class="hide-btn" data-hide="shin">❌</button>
+        <button class="focus-btn">🎯</button>
+        <button class="hide-btn">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="yayaz">
+    <div class="pov" data-player="yayaz" data-channel="yayaz_fn">
       <iframe src="https://player.twitch.tv/?channel=yayaz_fn&parent=kataktis.github.io&muted=true"></iframe>
       <div class="info-bar">
         <img src="fr.png"><span>Yayaz</span>
-        <button class="focus-btn" data-focus="yayaz">🎯</button>
-        <button class="hide-btn" data-hide="yayaz">❌</button>
+        <button class="focus-btn">🎯</button>
+        <button class="hide-btn">❌</button>
       </div>
     </div>
-
-    <div class="pov" data-player="nerzox">
+    <div class="pov" data-player="nerzox" data-channel="nerzox35">
       <iframe src="https://player.twitch.tv/?channel=nerzox35&parent=kataktis.github.io&muted=true"></iframe>
       <div class="info-bar">
         <img src="fr.png"><span>Nerzox</span>
-        <button class="focus-btn" data-focus="nerzox">🎯</button>
-        <button class="hide-btn" data-hide="nerzox">❌</button>
+        <button class="focus-btn">🎯</button>
+        <button class="hide-btn">❌</button>
       </div>
     </div>
   </div>
@@ -219,10 +248,7 @@
   <script>
     const povs = document.querySelectorAll('.pov');
     const checkboxes = document.querySelectorAll('.player-selection input');
-    const focusButtons = document.querySelectorAll('[data-focus]');
-    const hideButtons = document.querySelectorAll('[data-hide]');
-    const povArray = Array.from(povs);
-    let focusedIndex = -1;
+    let focused = null;
 
     function resizePOVs() {
       const visible = document.querySelectorAll('.pov:not(.hidden)');
@@ -233,65 +259,41 @@
       else grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(0, 1fr))';
     }
 
-    focusButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const player = btn.getAttribute('data-focus');
-        const pov = document.querySelector(`.pov[data-player="${player}"]`);
-        if (pov.classList.contains('focused')) {
+    // Gestion du focus + son
+    povs.forEach(pov => {
+      const focusBtn = pov.querySelector('.focus-btn');
+      const hideBtn = pov.querySelector('.hide-btn');
+      const player = pov.dataset.player;
+
+      focusBtn.addEventListener('click', () => {
+        if (focused === pov) {
           pov.classList.remove('focused');
-          focusedIndex = -1;
-          reloadAllMuted(true);
+          focused = null;
+          reloadAll(true);
         } else {
           povs.forEach(p => p.classList.remove('focused'));
           pov.classList.add('focused');
-          focusedIndex = povArray.indexOf(pov);
-          reloadAllMuted(true);
+          focused = pov;
+          reloadAll(true);
           reloadPOV(pov, false);
         }
       });
-    });
 
-    hideButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const player = btn.getAttribute('data-hide');
-        const pov = document.querySelector(`.pov[data-player="${player}"]`);
+      hideBtn.addEventListener('click', () => {
         pov.classList.add('hidden');
-        document.querySelector(`.player-selection input[data-player="${player}"]`).checked = false;
+        document.querySelector(`[data-player="${player}"]`).checked = false;
         resizePOVs();
       });
     });
 
     checkboxes.forEach(cb => {
       cb.addEventListener('change', () => {
-        const player = cb.getAttribute('data-player');
+        const player = cb.dataset.player;
         const pov = document.querySelector(`.pov[data-player="${player}"]`);
         pov.classList.toggle('hidden', !cb.checked);
         resizePOVs();
       });
     });
-
-    document.addEventListener('keydown', (e) => {
-      if (focusedIndex === -1) return;
-      if (e.key === 'ArrowRight') changeFocus(1);
-      else if (e.key === 'ArrowLeft') changeFocus(-1);
-      else if (e.key === 'Escape') {
-        povArray[focusedIndex].classList.remove('focused');
-        focusedIndex = -1;
-        reloadAllMuted(true);
-      }
-    });
-
-    function changeFocus(direction) {
-      povArray[focusedIndex].classList.remove('focused');
-      focusedIndex = (focusedIndex + direction + povArray.length) % povArray.length;
-      povArray[focusedIndex].classList.add('focused');
-      reloadAllMuted(true);
-      reloadPOV(povArray[focusedIndex], false);
-    }
-
-    function reloadAllMuted(mute) {
-      povArray.forEach(pov => reloadPOV(pov, mute));
-    }
 
     function reloadPOV(pov, mute) {
       const iframe = pov.querySelector('iframe');
@@ -300,9 +302,28 @@
       iframe.src = src.toString();
     }
 
+    function reloadAll(mute) {
+      povs.forEach(pov => reloadPOV(pov, mute));
+    }
+
+    // Détection des flux offline
+    povs.forEach(pov => {
+      const iframe = pov.querySelector('iframe');
+      iframe.addEventListener('error', () => showOffline(pov));
+      setTimeout(() => { if (!iframe.contentWindow) showOffline(pov); }, 5000);
+    });
+
+    function showOffline(pov) {
+      if (!pov.querySelector('.offline-banner')) {
+        const banner = document.createElement('div');
+        banner.className = 'offline-banner';
+        banner.textContent = 'OFFLINE';
+        pov.appendChild(banner);
+      }
+    }
+
     window.addEventListener('resize', resizePOVs);
     resizePOVs();
   </script>
 </body>
 </html>
-
