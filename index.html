@@ -171,9 +171,11 @@
   <div class="player-selection">
     <label><input type="checkbox" data-player="erxk" checked><img src="hu.png" alt="🇭🇺"> Erxk</label>
     <label><input type="checkbox" data-player="haxo" checked><img src="it.png" alt="🇮🇹"> Haxo</label>
+    <label><input type="checkbox" data-player="robymasteя" checked><img src="it.png" alt="🇫🇷"> Robymasteя</label>
     <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷"> Shin</label>
     <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷"> Yayaz</label>
     <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷"> Nerzox</label>
+    <label><input type="checkbox" data-player="robymasteя" checked><img src="it.png" alt="🇫🇷"> Robymasteя</label>
   </div>
 
   <div class="pov-grid">
@@ -218,17 +220,27 @@
     </div>
   </div>
 
+      <div class="pov" data-player="robymasteя">
+      <div id="player-robymasteя" style="width:100%;height:100%;"></div>
+      <div class="info-bar">
+        <img src="fr.png" alt="🇫🇷"><span>Robymasteя</span>
+        <button class="focus-btn" data-focus="robymasteя">🎯</button>
+      </div>
+    </div>
+  </div>
+robymasteя
   <footer>Kataktis eSport - Interface Staff POV</footer>
 
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
-    const playerIds = ['erxk','haxo','shin','yayaz','nerzox'];
+    const playerIds = ['erxk','haxo','shin','yayaz','nerzox','robymasteя'];
     const channels = {
       'erxk':'erxk0',
       'haxo':'haxofnbr',
       'shin':'12shinn',
       'yayaz':'yayaz_fn',
       'nerzox':'nerzox35'
+      'robymasteя':'robyymasterato'
     };
     const players = {};
     let focusedPlayer = null;
@@ -340,4 +352,5 @@
   </script>
 </body>
 </html>
+
 
