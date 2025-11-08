@@ -171,6 +171,8 @@
   <div class="player-selection">
     <label><input type="checkbox" data-player="macro" checked><img src="es.png" alt="🇫🇷"> Macro</label>
     <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷"> Shin</label>
+    <label><input type="checkbox" data-player="macro" checked><img src="it.png" alt="🇫🇷"> Macro</label>
+    <label><input type="checkbox" data-player="eko" checked><img src="fr.png" alt="🇫🇷"> Eko</label>
     <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷"> Yayaz</label>
     <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷"> Nerzox</label>
   </div>
@@ -191,6 +193,24 @@
       <div class="info-bar">
         <img src="fr.png" alt="🇫🇷"><span>Shin</span>
         <button class="focus-btn" data-focus="shin">🎯</button>
+      </div>
+    </div>
+
+            <div class="pov" data-player="haxo">
+      <div id="player-haxo" style="width:100%;height:100%;"></div>
+      <div class="info-bar">
+        <img src="it.png" alt="🇫🇷"><span>Haxo</span>
+        <button class="focus-btn" data-focus="haxo">🎯</button>
+      </div>
+    </div>
+
+  
+
+    <div class="pov" data-player="eko">
+      <div id="player-eko" style="width:100%;height:100%;"></div>
+      <div class="info-bar">
+        <img src="fr.png" alt="🇫🇷"><span>Eko</span>
+        <button class="focus-btn" data-focus="eko">🎯</button>
       </div>
     </div>
 
@@ -216,12 +236,14 @@
 
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
-    const playerIds = ['shin','yayaz','nerzox','macro'];
+    const playerIds = ['shin','yayaz','nerzox','macro','haxo','eko'];
     const channels = {
       'shin':'12shinn',
       'yayaz':'yayaz_fn',
       'nerzox':'nerzox35',
-      'macro':'only_m4cro'
+      'macro':'only_m4cro',
+      'haxo':'haxofnbr',
+      'eko':'ekoftn'
     };
     const players = {};
     let focusedPlayer = null;
@@ -333,6 +355,7 @@
   </script>
 </body>
 </html>
+
 
 
 
