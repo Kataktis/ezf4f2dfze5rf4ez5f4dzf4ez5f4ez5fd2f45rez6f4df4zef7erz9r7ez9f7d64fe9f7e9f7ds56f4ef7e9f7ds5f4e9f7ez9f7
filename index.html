@@ -5,11 +5,255 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kataktis POV Manager</title>
 
-  <!-- Favicon LIVE -->
-  <link rel="icon" type="image/png" href="favicon.png" sizes="512x512">
-  <link rel="apple-touch-icon" href="favicon.png">
-  <meta name="theme-color" content="#b10000">
 
+<style>
+:root {
+  --text-color: #fff;
+  --team-color: #a85cf9;
+  --accent-color: #a85cf9;
+  --bg-dark: rgba(10, 0, 20, 0.9);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--text-color);
+  background: #000;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ==== CANVAS ==== */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* ==== HEADER ==== */
+header {
+  position: sticky;
+  top: 0;
+  background: rgba(10, 0, 25, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--team-color);
+  box-shadow: 0 0 20px rgba(168, 92, 249, 0.3);
+  z-index: 1000;
+  transition: 0.4s ease;
+}
+
+header .logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--team-color);
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--accent-color);
+}
+
+nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #ddd;
+  font-weight: bold;
+  transition: color 0.3s ease, text-shadow 0.3s;
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: var(--team-color);
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after,
+nav a.active::after {
+  width: 100%;
+}
+
+nav a:hover,
+nav a.active {
+  color: var(--team-color);
+  text-shadow: 0 0 8px var(--accent-color);
+}
+
+/* ==== SECTIONS ==== */
+.section {
+  display: none;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 120px 20px 80px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform: translateY(20px);
+}
+
+.section.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==== TITRES ==== */
+h1, h2, h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--accent-color);
+  text-shadow: 0 0 20px var(--team-color);
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+p {
+  max-width: 850px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+  color: #eee;
+}
+
+/* ==== CONTAINERS ==== */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom: 80px;
+}
+
+.card {
+  background: rgba(25, 0, 50, 0.7);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 35px 30px;
+  width: 340px;
+  box-shadow: 0 0 25px rgba(168, 92, 249, 0.4);
+  border: 1px solid rgba(168, 92, 249, 0.3);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 40px rgba(224, 86, 253, 0.7);
+}
+
+.card h3 {
+  margin-bottom: 20px;
+  color: var(--team-color);
+  border-left: 5px solid var(--team-color);
+  padding-left: 12px;
+  text-shadow: 0 0 10px var(--team-color);
+}
+
+/* ==== FORM ELEMENTS ==== */
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  text-align: left;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--team-color);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px var(--accent-color);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ==== BUTTONS ==== */
+button {
+  margin-top: 25px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(45deg, var(--team-color), var(--accent-color));
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(45deg, var(--accent-color), var(--team-color));
+  box-shadow: 0 0 20px var(--accent-color);
+  transform: translateY(-2px);
+}
+
+/* ==== MESSAGES ==== */
+#form-message, #partner-message, #coaching-message {
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ==== FOOTER ==== */
+footer {
+  text-align: center;
+  padding: 25px;
+  border-top: 2px solid var(--team-color);
+  background: rgba(0, 0, 0, 0.6);
+  color: #ccc;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 900px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  nav {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  nav a {
+    margin: 10px 15px 0 0;
+  }
+}
   <style>
     body {
       background-color: #0a0a0a;
@@ -19,6 +263,59 @@
       padding: 0;
     }
 
+@media (max-width: 600px) {
+  .card {
+    width: 90%;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+  header .logo {
+    font-size: 1.4rem;
+  }
+  body {
+    font-size: 0.95rem;
+  }
+}
+.news-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.news-card {
+  width: 90%;
+  max-width: 700px;
+  background: rgba(25, 0, 50, 0.7);
+  border: 1px solid rgba(168, 92, 249, 0.3);
+  border-radius: 15px;
+  padding: 20px 25px;
+  text-align: left;
+  box-shadow: 0 0 15px rgba(168, 92, 249, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(224, 86, 253, 0.6);
+}
+
+.news-card h3 {
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px var(--team-color);
+}
+
+.news-card span {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+</style>
     header {
       display: flex;
       align-items: center;
@@ -29,11 +326,43 @@
     }
 
     header img { height: 50px; }
+
+    .title-live {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     header h1 {
       margin: 0;
       font-size: 22px;
       text-transform: uppercase;
       letter-spacing: 2px;
+    }
+
+    /* --- BADGE LIVE --- */
+    .live-badge {
+      display: flex;
+      align-items: center;
+      background: black;
+      border: 2px solid #ff0000;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+      gap: 5px;
+    }
+    .live-badge .dot {
+      width: 10px;
+      height: 10px;
+      background: red;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
     }
 
     .player-selection {
@@ -132,74 +461,97 @@
       border-top: 2px solid #b10000;
     }
   </style>
+
+
+
+
+
 </head>
 <body>
   <header>
     <img src="logo.png" alt="Logo Team">
-    <h1>Kataktis POV Manager</h1>
+    <div class="title-live">
+      <h1>Kataktis POV Manager</h1>
+      <div class="live-badge"><span class="dot"></span> LIVE</div>
+    </div>
   </header>
 
   <div class="player-selection">
-    <label><input type="checkbox" data-player="erxk" checked><img src="hu.png"> Erxk</label>
-    <label><input type="checkbox" data-player="haxo" checked><img src="it.png"> Haxo</label>
-    <label><input type="checkbox" data-player="shin" checked><img src="fr.png"> Shin</label>
-    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png"> Yayaz</label>
-    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png"> Nerzox</label>
+    <label><input type="checkbox" data-player="macro" checked><img src="es.png" alt="🇫🇷"> Macro</label>
+    <label><input type="checkbox" data-player="shin" checked><img src="fr.png" alt="🇫🇷"> Shin</label>
+    <label><input type="checkbox" data-player="haxo" checked><img src="it.png" alt="🇫🇷"> Haxo</label>
+    <label><input type="checkbox" data-player="eko" checked><img src="fr.png" alt="🇫🇷"> Eko</label>
+    <label><input type="checkbox" data-player="yayaz" checked><img src="fr.png" alt="🇫🇷"> Yayaz</label>
+    <label><input type="checkbox" data-player="nerzox" checked><img src="fr.png" alt="🇫🇷"> Nerzox</label>
   </div>
 
   <div class="pov-grid">
-    <div class="pov" data-player="erxk">
-      <div id="player-erxk" style="width:100%;height:100%;"></div>
+        <div class="pov" data-player="macro">
+      <div id="player-macro" style="width:100%;height:100%;"></div>
       <div class="info-bar">
-        <img src="hu.png"><span>Erxk</span>
-        <button class="focus-btn" data-focus="erxk">🎯</button>
+        <img src="es.png" alt="🇫🇷"><span>Macro</span>
+        <button class="focus-btn" data-focus="macro">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="haxo">
-      <div id="player-haxo"></div>
-      <div class="info-bar">
-        <img src="it.png"><span>Haxo</span>
-        <button class="focus-btn" data-focus="haxo">🎯</button>
-      </div>
-    </div>
+
 
     <div class="pov" data-player="shin">
-      <div id="player-shin"></div>
+      <div id="player-shin" style="width:100%;height:100%;"></div>
       <div class="info-bar">
-        <img src="fr.png"><span>Shin</span>
+        <img src="fr.png" alt="🇫🇷"><span>Shin</span>
         <button class="focus-btn" data-focus="shin">🎯</button>
       </div>
     </div>
 
-    <div class="pov" data-player="yayaz">
-      <div id="player-yayaz"></div>
+            <div class="pov" data-player="haxo">
+      <div id="player-haxo" style="width:100%;height:100%;"></div>
       <div class="info-bar">
-        <img src="fr.png"><span>Yayaz</span>
+        <img src="it.png" alt="🇫🇷"><span>Haxo</span>
+        <button class="focus-btn" data-focus="haxo">🎯</button>
+      </div>
+    </div>
+
+
+
+    <div class="pov" data-player="eko">
+      <div id="player-eko" style="width:100%;height:100%;"></div>
+      <div class="info-bar">
+        <img src="fr.png" alt="🇫🇷"><span>Eko</span>
+        <button class="focus-btn" data-focus="eko">🎯</button>
+      </div>
+    </div>
+
+    <div class="pov" data-player="yayaz">
+      <div id="player-yayaz" style="width:100%;height:100%;"></div>
+      <div class="info-bar">
+        <img src="fr.png" alt="🇫🇷"><span>Yayaz</span>
         <button class="focus-btn" data-focus="yayaz">🎯</button>
       </div>
     </div>
 
     <div class="pov" data-player="nerzox">
-      <div id="player-nerzox"></div>
+      <div id="player-nerzox" style="width:100%;height:100%;"></div>
       <div class="info-bar">
-        <img src="fr.png"><span>Nerzox</span>
+        <img src="fr.png" alt="🇫🇷"><span>Nerzox</span>
         <button class="focus-btn" data-focus="nerzox">🎯</button>
       </div>
     </div>
+
   </div>
 
   <footer>Kataktis eSport - Interface Staff POV</footer>
 
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script>
-    const playerIds = ['erxk','haxo','shin','yayaz','nerzox'];
+    const playerIds = ['shin','yayaz','nerzox','macro','haxo','eko'];
     const channels = {
-      'erxk': 'erxk0',
-      'haxo': 'haxofnbr',
-      'shin': '12shinn',
-      'yayaz': 'yayaz_fn',
-      'nerzox': 'nerzox35'
+      'shin':'12shinn',
+      'yayaz':'yayaz_fn',
+      'nerzox':'nerzox35',
+      'macro':'only_m4cro',
+      'haxo':'haxofnbr',
+      'eko':'ekoftn'
     };
     const players = {};
     let focusedPlayer = null;
@@ -223,25 +575,105 @@
 
     document.querySelectorAll('.focus-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.dataset.focus;
-        if (focusedPlayer === id) {
+        const id = btn.getAttribute('data-focus');
+        if(focusedPlayer === id){
           players[id].setMuted(true);
           document.querySelector(`.pov[data-player="${id}"]`).classList.remove('focused');
           focusedPlayer = null;
-        } else {
-          focusPlayer(id);
-        }
+        } else focusPlayer(id);
       });
     });
 
     document.querySelectorAll('.player-selection input').forEach(cb => {
       cb.addEventListener('change', () => {
-        const id = cb.dataset.player;
+        const id = cb.getAttribute('data-player');
         const pov = document.querySelector(`.pov[data-player="${id}"]`);
-        pov.classList.toggle('hidden', !cb.checked);
+        if(cb.checked) pov.classList.remove('hidden');
+        else pov.classList.add('hidden');
       });
     });
+
+    function resizePOVs(){
+      const visible = document.querySelectorAll('.pov:not(.hidden)');
+      const grid = document.querySelector('.pov-grid');
+      if(visible.length===1) grid.style.gridTemplateColumns='1fr';
+      else if(visible.length===2) grid.style.gridTemplateColumns='1fr 1fr';
+      else if(visible.length<=4) grid.style.gridTemplateColumns='repeat(2,1fr)';
+      else grid.style.gridTemplateColumns='repeat(auto-fit,minmax(400px,1fr))';
+    }
+    window.addEventListener('resize', resizePOVs);
+    resizePOVs();
+
+    document.addEventListener('keydown', e => {
+      if(!focusedPlayer) return;
+      let idx = playerIds.indexOf(focusedPlayer);
+      if(e.key==='ArrowRight') idx=(idx+1)%playerIds.length;
+      else if(e.key==='ArrowLeft') idx=(idx-1+playerIds.length)%playerIds.length;
+      else if(e.key==='Escape'){
+        players[focusedPlayer].setMuted(true);
+        document.querySelector(`.pov[data-player="${focusedPlayer}"]`).classList.remove('focused');
+        focusedPlayer=null;
+        return;
+      }
+      focusPlayer(playerIds[idx]);
+    });
+
+
+  // --- FAVICON "LIVE" ANIMÉ ---
+  const canvas = document.createElement("canvas");
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext("2d");
+
+  const favicon = document.createElement("link");
+  favicon.rel = "icon";
+  document.head.appendChild(favicon);
+
+  let visible = true;
+  function drawFavicon() {
+    ctx.clearRect(0, 0, 64, 64);
+
+    // fond noir
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, 64, 64);
+
+    // texte LIVE
+    ctx.fillStyle = "#ff0000";
+    ctx.font = "bold 28px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("LIVE", 32, 42);
+
+    // point rouge clignotant
+    if (visible) {
+      ctx.beginPath();
+      ctx.arc(14, 18, 6, 0, Math.PI * 2);
+      ctx.fillStyle = "#ff0000";
+      ctx.fill();
+    }
+
+    // appliquer comme favicon
+    favicon.href = canvas.toDataURL("image/png");
+    visible = !visible;
+  }
+
+  // animation toutes les 700ms
+  setInterval(drawFavicon, 700);
+  drawFavicon();
+
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
