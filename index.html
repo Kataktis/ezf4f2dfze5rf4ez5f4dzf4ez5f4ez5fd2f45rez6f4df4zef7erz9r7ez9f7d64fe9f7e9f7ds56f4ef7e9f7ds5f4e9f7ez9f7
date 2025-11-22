@@ -65,7 +65,7 @@
     }
 
     .player-selection {
-      background-color: #1a1a1a;
+      background-color: #010101;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -156,9 +156,67 @@
       text-align: center;
       padding: 10px;
       font-size: 13px;
-      background-color: #1a1a1a;
+      background-color: #010101;
       border-top: 2px solid #b10000;
     }
+/* ==== HEADER ==== */
+header {
+  position: sticky;
+  top: 0;
+  background: rgba(10, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--team-color);
+  box-shadow: 0 0 20px rgba(250, 0, 0, 0.3);
+  z-index: 1000;
+  transition: 0.4s ease;
+}
+
+header .logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--team-color);
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--accent-color);
+}
+
+nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #ddd;
+  font-weight: bold;
+  transition: color 0.3s ease, text-shadow 0.3s;
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: var(--team-color);
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after,
+nav a.active::after {
+  width: 100%;
+}
+
+nav a:hover,
+nav a.active {
+  color: var(--team-color);
+  text-shadow: 0 0 8px var(--accent-color);
+}
+
+
+
+
   </style>
 
 
@@ -375,4 +433,3 @@
   </script>
 </body>
 </html>
-
